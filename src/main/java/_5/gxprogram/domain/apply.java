@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -23,8 +25,10 @@ public class apply {
     private member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "program_id")
-    private gxProgram program;
+    @JoinColumn(name = "course_id")
+    private course course;
+
+    private LocalDate targetDate; // 예: 2026-06-16 (정규권은 null 허용 또는 시작일 저장)
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

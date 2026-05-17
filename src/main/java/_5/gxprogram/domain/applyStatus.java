@@ -5,5 +5,6 @@ public enum applyStatus {
     WAITING,            // 예약 대기
     APPLIED,            // 신청 완료
     PAYMENT_COMPLETED,  // 결제 완료
-    CANCELLED           // 취소됨
+    CANCELLED,
+    PENDING_PAYMENT
 }
