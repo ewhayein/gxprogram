@@ -37,5 +37,9 @@ public class apply {
     @Column(nullable = false)
     private Integer paymentAmount; // 결제 예정 금액 or 실제 결제된 금액
 
-    private LocalDateTime createdAt; // 담은 일시 or 신청 일시
+    private LocalDateTime createdAt; // 담은 일시 or 신청 일시 (꼭 필요할까? 통계용 아니면 확인용?)
+
+    private LocalDateTime expiresAt; // 결제 만료 일시 (결제 대기 상태로 넘어갈 때 '현재시간 + 10분' 세팅)
+
+    private LocalDateTime paymentCompletedAt; //결제 완료 일시 (꼭 필요할까? 환불할 때 아마)
 }
