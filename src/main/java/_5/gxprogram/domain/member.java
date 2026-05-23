@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED) //JPA를 위한 기본 생성자는 보호 유지
 public class member {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
@@ -37,4 +37,16 @@ public class member {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private memberStatus status; // 회원 상태
+
+    public member(String name) {
+        this.name = name;
+    } //테스트에 필요한 public 생성자 (디폴트가 protected여서)
+
+    public member (String name, String pw, String studentId, memberRole role, memberStatus status) {
+        this.name = name;
+        this.password = pw;
+        this.studentId = studentId;
+        this.role = role;
+        this.status = status;
+    }
 }
