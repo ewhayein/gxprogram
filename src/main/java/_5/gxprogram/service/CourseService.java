@@ -9,8 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
+@Service @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CourseService {
     private final CourseRepository courseRepository;

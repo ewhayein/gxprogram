@@ -17,8 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
-@RequiredArgsConstructor
+@Service @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
@@ -27,15 +26,13 @@ public class MemberService {
     private static final DateTimeFormatter DT_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     private static final DateTimeFormatter D_FMT  = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    /* 회원가입 */
+    // 회원 가입
     @Transactional
     public Long signup(MemberSignupRequestDTO dto) {
-        // 학번 중복 검사
+        // 학번 중복 여부
         if (memberRepository.existsByStudentId(dto.getStudentId())) {
             throw new IllegalArgumentException("이미 사용 중인 학번입니다: " + dto.getStudentId());
         }
-
-        // TODO: 실제 운영 시 비밀번호 BCrypt 암호화 적용 (PasswordEncoder)
         member newMember = member.builder()
                 .studentId(dto.getStudentId())
                 .password(dto.getPassword())
@@ -45,33 +42,27 @@ public class MemberService {
                 .role(dto.getRole())
                 .status(memberStatus.ACTIVE)
                 .build();
-
         return memberRepository.save(newMember).getId();
     }
 
-    /* 로그인 검증 */
+    // login 하기
     public Long login(LoginRequestDTO dto) {
         member found = memberRepository.findByStudentId(dto.getStudentId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 학번입니다."));
-
-        // TODO: 실제 운영 시 passwordEncoder.matches() 사용
         if (!found.getPassword().equals(dto.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-
         if (found.getStatus() != memberStatus.ACTIVE) {
             throw new IllegalStateException("사용할 수 없는 계정입니다. 상태: " + found.getStatus());
         }
-
         return found.getId();
     }
 
-    /* 마이페이지 조회 */
+    // 마이 페이지
     public MyPageResponseDTO getMyPage(Long memberId) {
         member m = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-        // A파트가 만든 apply 데이터 조회 (fetch join으로 N+1 방지)
         List<apply> histories = applyRepository.findAllByMemberIdWithCourse(memberId);
 
         List<ApplyHistoryDTO> historyDTOs = histories.stream()
@@ -89,7 +80,7 @@ public class MemberService {
                 .build();
     }
 
-    /* apply 엔티티 → ApplyHistoryDTO 변환 */
+    // apply 엔티티 → ApplyHistoryDTO 변환
     private ApplyHistoryDTO toApplyHistoryDTO(apply a) {
         String courseInfo = String.format("%s %s~%s / %s",
                 a.getCourse().getDayOfWeek(),
