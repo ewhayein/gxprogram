@@ -10,7 +10,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class course {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "course_id")

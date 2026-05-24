@@ -1,0 +1,75 @@
+<!--로그인-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인 - GX 프로그램</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/">GX 프로그램</a>
+        <a href="/signup" class="btn btn-outline-light btn-sm">회원가입</a>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="card-title mb-4 fw-bold">로그인</h4>
+                    <div id="alertBox"></div>
+
+                    <div class="mb-3">
+                        <label class="form-label">학번</label>
+                        <input type="text" id="studentId" class="form-control" placeholder="학번을 입력하세요">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">비밀번호</label>
+                        <input type="password" id="password" class="form-control" placeholder="비밀번호를 입력하세요">
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="login()">로그인</button>
+                    <div class="text-center mt-3">
+                        <small>처음이신가요? <a href="/signup">회원가입</a></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function login() {
+        const data = {
+            studentId: document.getElementById('studentId').value,
+            password: document.getElementById('password').value
+        };
+
+        try {
+            const res = await fetch('/api/members/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await res.json();
+            if (res.ok) {
+                localStorage.setItem('memberId', result.memberId);
+                document.getElementById('alertBox').innerHTML =
+                    '<div class="alert alert-success">로그인 성공! 이동합니다...</div>';
+                setTimeout(() => location.href = '/courses', 1000);
+            } else {
+                document.getElementById('alertBox').innerHTML =
+                    `<div class="alert alert-danger">${result.message || '로그인 실패'}</div>`;
+            }
+        } catch (e) {
+            document.getElementById('alertBox').innerHTML =
+                '<div class="alert alert-danger">서버 오류가 발생했습니다.</div>';
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

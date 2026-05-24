@@ -1,0 +1,95 @@
+<!--회원 가입-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>회원가입 - GX 프로그램</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-primary">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="/">GX 프로그램</a>
+    <a href="/login" class="btn btn-outline-light btn-sm">로그인</a>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-5">
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
+          <h4 class="card-title mb-4 fw-bold">회원가입</h4>
+          <div id="alertBox"></div>
+
+          <div class="mb-3">
+            <label class="form-label">학번 <span class="text-danger">*</span></label>
+            <input type="text" id="studentId" class="form-control" placeholder="학번을 입력하세요">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">비밀번호 <span class="text-danger">*</span></label>
+            <input type="password" id="password" class="form-control" placeholder="비밀번호를 입력하세요">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">이름 <span class="text-danger">*</span></label>
+            <input type="text" id="name" class="form-control" placeholder="이름을 입력하세요">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">전공</label>
+            <input type="text" id="major" class="form-control" placeholder="전공을 입력하세요 (선택)">
+          </div>
+          <div class="mb-4">
+            <label class="form-label">회원 유형 <span class="text-danger">*</span></label>
+            <select id="role" class="form-select">
+              <option value="">선택하세요</option>
+              <option value="EWHA_STUDENT">이화 재학생</option>
+              <option value="ALUMNI">졸업생</option>
+              <option value="FACULTY">교직원</option>
+              <option value="EWHA_FAMILY">이화 가족</option>
+            </select>
+          </div>
+          <button class="btn btn-primary w-100" onclick="signup()">가입하기</button>
+          <div class="text-center mt-3">
+            <small>이미 회원이신가요? <a href="/login">로그인</a></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  async function signup() {
+      const data = {
+          studentId: document.getElementById('studentId').value,
+          password: document.getElementById('password').value,
+          name: document.getElementById('name').value,
+          major: document.getElementById('major').value,
+          role: document.getElementById('role').value
+      };
+
+      try {
+          const res = await fetch('/api/members/signup', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data)
+          });
+          const result = await res.json();
+          if (res.ok) {
+              document.getElementById('alertBox').innerHTML =
+                  '<div class="alert alert-success">회원가입 완료! 로그인해주세요.</div>';
+              setTimeout(() => location.href = '/login', 1500);
+          } else {
+              document.getElementById('alertBox').innerHTML =
+                  `<div class="alert alert-danger">${result.message || '오류가 발생했습니다.'}</div>`;
+          }
+      } catch (e) {
+          document.getElementById('alertBox').innerHTML =
+              '<div class="alert alert-danger">서버 오류가 발생했습니다.</div>';
+      }
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
