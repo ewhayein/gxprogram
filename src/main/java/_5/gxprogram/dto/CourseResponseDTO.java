@@ -12,7 +12,6 @@ import _5.gxprogram.domain.programStatus;
 import java.time.LocalTime;
 
 @Getter @Setter
-
 public class CourseResponseDTO {
 
     // program 정보
@@ -32,7 +31,7 @@ public class CourseResponseDTO {
     private LocalTime endTime;
     private Integer maxCapacity;
     private Integer currentCapacity;
-    private Integer remainingSlots;     // 잔여석 (계산 필드)
+    private Integer remainingSlots;     // 잔여석
     private programStatus status;
 
     // QueryDSL Projections 용 생성자

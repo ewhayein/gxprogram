@@ -3,9 +3,8 @@ package _5.gxprogram.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import java.util.List;
 
-/* 결제 내역 요약 응답 DTO (마이페이지 주문 내역용) */
+import java.util.List;
 
 @Getter @Setter
 public class OrderSummaryResponseDTO {
