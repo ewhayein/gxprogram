@@ -34,23 +34,19 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testAnnotationProcessor 'org.projectlombok:lombok'
-
-	// ========== B파트 추가 의존성 ==========
-	// QueryDSL
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
+
 	annotationProcessor("com.querydsl:querydsl-apt:5.0.0:jakarta")
 	annotationProcessor("jakarta.annotation:jakarta.annotation-api")
 	annotationProcessor("jakarta.persistence:jakarta.persistence-api")
-
-	// Validation (@NotBlank, @Valid 등)
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
 
-// QueryDSL Q클래스 생성 경로
+
 def generated = 'src/main/generated'
 sourceSets {
 	main.java.srcDirs += [generated]
