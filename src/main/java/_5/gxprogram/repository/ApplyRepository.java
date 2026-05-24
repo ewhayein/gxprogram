@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public interface ApplyRepository extends JpaRepository<apply, Long> {
-    /*마이페이지: 특정 회원의 전체 신청 내역 (course, program fetch join으로 N+1 방지)*/
+    /* 전체 신청 내역 */
     @Query("SELECT a FROM apply a " +
             "JOIN FETCH a.course c " +
             "JOIN FETCH c.program p " +
@@ -19,7 +19,7 @@ public interface ApplyRepository extends JpaRepository<apply, Long> {
             "ORDER BY a.createdAt DESC")
     List<apply> findAllByMemberIdWithCourse(@Param("memberId") Long memberId);
 
-    /*마이페이지: 특정 상태의 신청 내역만 조회 (예: 결제 완료만)*/
+    /* 신청 내역만 조회 */
     @Query("SELECT a FROM apply a " +
             "JOIN FETCH a.course c " +
             "JOIN FETCH c.program p " +
