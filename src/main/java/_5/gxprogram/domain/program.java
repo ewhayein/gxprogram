@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
 public class program {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "program_id")

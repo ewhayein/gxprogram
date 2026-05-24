@@ -7,10 +7,12 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import _5.gxprogram.domain.applyStatus;
+import lombok.Setter;
 // import _5.gxprogram.domain.Member; // Member 엔티티 import
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class apply {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

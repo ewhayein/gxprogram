@@ -4,12 +4,15 @@ import _5.gxprogram.domain.apply;
 import _5.gxprogram.domain.applyStatus;
 import _5.gxprogram.domain.course;
 import _5.gxprogram.domain.member;
+import _5.gxprogram.exception.BusinessException;
 import _5.gxprogram.repository.ApplyRepository;
 import _5.gxprogram.repository.CourseRepository;
 import _5.gxprogram.repository.MemberRepository; // 가상의 회원 리포지토리
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +34,19 @@ public class ApplyService {
 
         member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다. id = " + memberId));
+
+        List<apply> existingReservations = applyRepository.findByMemberAndStatusIn(member, List.of(applyStatus.PENDING_PAYMENT, applyStatus.PAYMENT_COMPLETED));
+
+        for (apply res: existingReservations){
+            course existingCourse = res.getCourse();
+
+            if (course.getTargetDate().equals(existingCourse.getTargetDate())){
+                if(course.getStartTime().isBefore(existingCourse.getEndTime()) &&
+                existingCourse.getStartTime().isBefore(course.getEndTime())) {
+                    throw new BusinessException("해당 날짜에 이미 다른 강좌가 예약되어 있습니다.");
+                }
+            }
+        }
 
         // 2. 강좌 잔여 좌석 1개 차감 (내부적으로 수량 검증 로직 작동)
         // 💡 이때 여러 명이 동시에 접근하면 엔티티의 @Version 덕분에 낙관적 락이 작동하여 충돌을 감지합니다.

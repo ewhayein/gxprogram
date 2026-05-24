@@ -1,10 +1,9 @@
 package _5.gxprogram.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -12,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class course {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +21,8 @@ public class course {
     private String name;
 
     private int availableSeats;
+
+    private LocalDate targetDate;
 
     // N:1 연관관계 매핑 (어떤 프로그램에 속한 강좌인지)
     @ManyToOne(fetch = FetchType.LAZY)

@@ -34,4 +34,10 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<String> handleBusinessException(BusinessException e) {
+        // 프론트엔드에 에러 메시지를 400 상태코드와 함께 전달
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
 }
