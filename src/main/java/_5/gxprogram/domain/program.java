@@ -10,7 +10,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity @Getter
+@Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class program {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
