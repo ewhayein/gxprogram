@@ -13,7 +13,15 @@ import java.util.List;
 public interface ApplyRepository extends JpaRepository<apply, Long> {
     // 🔥 특정 회원의 특정 상태(예: PENDING_PAYMENT)인 예약 목록만 가져옵니다.
     List<apply> findByMemberIdAndStatus(Long memberId, applyStatus status);
-    long countByMemberAndCategoryAndStatus(member member, programCategory category, applyStatus status);
+    @Query("SELECT count(a) FROM apply a " +
+            "JOIN a.course c " +
+            "JOIN c.program p " +
+            "WHERE a.member = :member " +
+            "AND p.category = :category " +
+            "AND a.status = :status")
+    long countByMemberAndCategoryAndStatus(@Param("member") member member,
+                                           @Param("category") programCategory category,
+                                           @Param("status") applyStatus status);
     @Query("select r from apply r where r.member = :member and r.status in :statuses")
     List<apply> findByMemberAndStatusIn(@Param("member") member member, @Param("statuses") List<applyStatus> statuses);
 }

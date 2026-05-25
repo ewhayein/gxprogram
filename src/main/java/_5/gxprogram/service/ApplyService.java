@@ -1,10 +1,12 @@
 package _5.gxprogram.service;
 
+import _5.gxprogram.domain.account;
 import _5.gxprogram.domain.apply;
 import _5.gxprogram.domain.applyStatus;
 import _5.gxprogram.domain.course;
 import _5.gxprogram.domain.member;
 import _5.gxprogram.exception.BusinessException;
+import _5.gxprogram.repository.AccountRepository;
 import _5.gxprogram.repository.ApplyRepository;
 import _5.gxprogram.repository.CourseRepository;
 import _5.gxprogram.repository.MemberRepository; // 가상의 회원 리포지토리
@@ -22,6 +24,7 @@ public class ApplyService {
     private final CourseRepository courseRepository;
     private final ApplyRepository applyRepository;
     private final MemberRepository memberRepository;
+    private final AccountRepository accountRepository;
 
     /**
      * 수강 신청 (예약 비즈니스 로직)
@@ -56,6 +59,7 @@ public class ApplyService {
         apply apply = new apply(course, member);
 
         // 4. DB에 저장
+        courseRepository.save(course);
         apply savedApply = applyRepository.save(apply);
 
         return savedApply.getId();
@@ -76,7 +80,11 @@ public class ApplyService {
         // 3. 해당 강좌의 좌석을 다시 1개 복구 (내부적으로 최대 정원 초과 검증)
         course course = apply.getCourse();
         course.increaseSeats();
+        courseRepository.save(course);
 
-        // 회원 계좌 잔액 환불(balance + 금액) 로직 추후 추가 예정
+        // 4. 회원 계좌 잔액 환불 (결제 시 기록된 paymentAmount만큼 복구)
+        account account = accountRepository.findByMemberId(apply.getMember().getId())
+                .orElseThrow(() -> new IllegalArgumentException("회원의 계좌 정보를 찾을 수 없습니다."));
+        account.setBalance(account.getBalance() + apply.getPaymentAmount());
     }
 }

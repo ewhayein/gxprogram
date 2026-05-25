@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -81,31 +82,48 @@ public class PaymentService {
             throw new IllegalStateException("결제할 내역이 존재하지 않습니다.");
         }
 
-        // 2. 최종 결제 금액 산출 (보안을 위해 화면에서 주는 금액을 믿지 않고 서버에서 다시 깐깐하게 계산합니다)
+        // 2. 예약별 할인 분배 계산 (서버에서 다시 깐깐하게 계산 - 보안)
+        Map<apply, Integer> discountMap = discountPolicy.calculateDiscountPerReservation(pendingReservations);
+
+        // 3. 총 원가 / 총 할인 / 최종 청구액 산출
         int totalOriginalPrice = 0;
         for (apply reservation : pendingReservations) {
             totalOriginalPrice += reservation.getCourse().getProgram().getPrice();
         }
-        int discountAmount = discountPolicy.calculateDiscountAmount(pendingReservations);
+        int discountAmount = discountMap.values().stream().mapToInt(Integer::intValue).sum();
         int finalBillingPrice = totalOriginalPrice - discountAmount;
 
-        // 3. 회원의 계좌(Account) 정보 조회
+        // 4. 회원의 계좌(Account) 정보 조회
         account account = accountRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원의 계좌 정보를 찾을 수 없습니다."));
 
-        // 4. [검증] 잔고 부족 시 예외(Exception) 발생 -> 여기서 에러가 터지면 @Transactional에 의해 자동 롤백됨!
+        // 5. [검증] 잔고 부족 시 예외(Exception) 발생 -> 여기서 에러가 터지면 @Transactional에 의해 자동 롤백됨!
         if (account.getBalance() < finalBillingPrice) {
             throw new IllegalStateException("잔고가 부족합니다. (현재 잔액: " + account.getBalance() + "원)");
         }
 
-        // 5. [확정 - 계좌 차감] 잔액이 충분하므로 계좌에서 최종 결제 금액을 뺍니다.
-        // 주의: Account 엔티티에 withdraw(int amount) 같은 메서드를 만들어두면 더 객체지향적입니다!
+        // 6. [확정 - 계좌 차감] 잔액이 충분하므로 계좌에서 최종 결제 금액을 뺍니다.
         account.setBalance(account.getBalance() - finalBillingPrice);
 
-        // 6. [확정 - 상태 변경] 모든 예약의 상태를 PAYMENT_COMPLETED로 일괄 업데이트하고 시간 기록
+        // 7. [확정] 각 예약에 결제 금액 / 상태 / 완료 시간 기록 (환불 시 paymentAmount 재사용)
+        int paymentAmountSum = 0;
+        LocalDateTime now = LocalDateTime.now();
         for (apply reservation : pendingReservations) {
-            reservation.setStatus(applyStatus.PAYMENT_COMPLETED); // 결제 완료로 상태 변경
-            reservation.setPaymentCompletedAt(LocalDateTime.now());     // 현재 시간 기록
+            int originalPrice = reservation.getCourse().getProgram().getPrice();
+            int perDiscount = discountMap.getOrDefault(reservation, 0);
+            int paymentAmount = originalPrice - perDiscount;
+
+            reservation.setPaymentAmount(paymentAmount);
+            reservation.setStatus(applyStatus.PAYMENT_COMPLETED);
+            reservation.setPaymentCompletedAt(now);
+
+            paymentAmountSum += paymentAmount;
+        }
+
+        // 8. [무결성 검증] 분배 합계 == 최종 청구액 (불일치 시 트랜잭션 롤백)
+        if (paymentAmountSum != finalBillingPrice) {
+            throw new IllegalStateException(
+                    "결제 금액 분배 합계가 최종 청구액과 일치하지 않습니다. (합계=" + paymentAmountSum + ", 청구액=" + finalBillingPrice + ")");
         }
 
         // (참고) JPA의 '더티 체킹(Dirty Checking)' 덕분에 save() 메서드를 따로 호출하지 않아도

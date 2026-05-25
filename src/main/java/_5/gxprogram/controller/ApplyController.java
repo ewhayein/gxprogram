@@ -29,7 +29,7 @@ public class ApplyController {
 
         // 1. 주방장(Service)에게 DTO 안의 회원ID와 강좌ID를 넘겨 요리(예약 로직) 지시
         // -> 이 안에서 좌석 차감, 낙관적 락 발동, PENDING_PAYMENT 상태 저장 등이 일어납니다.
-        applyService.applyCourse(requestDTO.getMemberId(), requestDTO.getCourseId());
+        applyService.applyCourse(requestDTO.getCourseId(), requestDTO.getMemberId());
 
         // 2. 에러(예: 좌석 부족, 동시성 충돌) 없이 로직이 끝났다면,
         // 프론트엔드에게 201 Created(생성됨) 상태 코드와 성공 메시지를 반환 (4번 단계)

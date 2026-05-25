@@ -50,7 +50,9 @@ public class apply {
         this.member = member;
         // ✅ applyStatus의 PENDING_PAYMENT 사용
         this.status = applyStatus.PENDING_PAYMENT;
+        this.createdAt = LocalDateTime.now();
         this.expiresAt = LocalDateTime.now().plusMinutes(10);
+        this.paymentAmount = 0;
     }
 
     // 결제 전 단순 취소 (결제 대기 상태에서만 가능)
