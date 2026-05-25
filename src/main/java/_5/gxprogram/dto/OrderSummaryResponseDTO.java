@@ -1,15 +1,17 @@
+// 주문 내역 요약
 package _5.gxprogram.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.util.List;
 
 /**
  * 프론트엔드 결제 확인창에 보여줄 영수증 DTO
  */
 @Getter
-@AllArgsConstructor // 모든 필드를 포함하는 생성자를 자동으로 만들어줍니다.
+@AllArgsConstructor
 public class OrderSummaryResponseDTO {
 
     private int totalOriginalPrice; // 총 결제 금액 (할인 전 원가 종합)
