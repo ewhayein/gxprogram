@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GX 프로그램 수강신청</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #00462A;
+    --primary-light: #005934;
+    --primary-dark: #002E1B;
+    --primary-bg: #E6F2ED;
+    --accent: #FF6F00;
+    --danger: #D32F2F;
+    --success: #2E7D32;
+    --warning: #F57C00;
+    --text-primary: #1A1A2E;
+    --text-secondary: #546E7A;
+    --text-muted: #90A4AE;
+    --border: #CFD8DC;
+    --border-focus: #00462A;
+    --bg-page: #F0F4F8;
+    --bg-card: #FFFFFF;
+    --bg-input: #F8FAFC;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+    --shadow-lg: 0 10px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08);
+    --radius: 10px;
+    --radius-sm: 6px;
+    --radius-lg: 16px;
+    --nav-h: 56px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg-page);
+    color: var(--text-primary);
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: var(--nav-h);
+    background: var(--primary);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px;
+    box-shadow: 0 2px 8px rgba(21,101,192,0.3);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 8px;
+    color: #fff; font-weight: 700; font-size: 17px; text-decoration: none; cursor: pointer;
+  }
+  .nav-logo span { color: #fff; font-size: 20px; }
+  .nav-right { display: flex; gap: 8px; }
+  .nav-btn {
+    background: rgba(255,255,255,0.15);
+    color: #fff; border: 1px solid rgba(255,255,255,0.3);
+    padding: 6px 16px; border-radius: 6px;
+    font-size: 13px; font-weight: 500; font-family: inherit;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .nav-btn:hover { background: rgba(255,255,255,0.25); }
+  .nav-btn.primary-nav {
+    background: #fff; color: var(--primary); border-color: #fff;
+  }
+  .nav-btn.primary-nav:hover { background: #E6F2ED; }
+
+  /* ── PAGE SYSTEM ── */
+  .page { display: none; min-height: 100vh; padding-top: var(--nav-h); }
+  .page.active { display: block; }
+
+  /* ── AUTH PAGES ── */
+  .auth-wrap {
+    min-height: calc(100vh - var(--nav-h));
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 40px 16px;
+  }
+
+  /* Tab switcher */
+  .auth-tabs {
+    display: flex; background: #fff;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    border: 1px solid var(--border); border-bottom: none;
+    width: 100%; max-width: 460px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .auth-tab {
+    flex: 1; padding: 14px;
+    text-align: center; font-size: 14px; font-weight: 600;
+    color: var(--text-muted); cursor: pointer;
+    border: none; background: transparent; font-family: inherit;
+    transition: all 0.2s; border-bottom: 3px solid transparent;
+  }
+  .auth-tab.active {
+    color: var(--primary); border-bottom-color: var(--primary);
+    background: var(--primary-bg);
+  }
+  .auth-tab:hover:not(.active) { background: #F5F5F5; color: var(--text-secondary); }
+
+  .auth-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    padding: 32px 36px 36px;
+    width: 100%; max-width: 460px;
+    box-shadow: var(--shadow-md);
+  }
+
+  .auth-title {
+    font-size: 22px; font-weight: 700;
+    color: var(--text-primary); margin-bottom: 24px;
+    letter-spacing: -0.3px;
+  }
+
+  .form-group { margin-bottom: 18px; }
+  .form-label {
+    display: block; font-size: 13px; font-weight: 600;
+    color: var(--text-secondary); margin-bottom: 6px;
+    letter-spacing: 0.1px;
+  }
+  .form-label .req { color: var(--danger); margin-left: 2px; }
+
+  .form-input {
+    width: 100%; padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 14px; font-family: inherit;
+    background: var(--bg-input);
+    color: var(--text-primary);
+    transition: all 0.2s; outline: none;
+  }
+  .form-input:focus {
+    border-color: var(--border-focus);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(0,70,42,0.12);
+  }
+  .form-input::placeholder { color: var(--text-muted); }
+
+  .form-select {
+    width: 100%; padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 14px; font-family: inherit;
+    background: var(--bg-input);
+    color: var(--text-primary);
+    cursor: pointer; outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2390A4AE' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    transition: border-color 0.2s;
+  }
+  .form-select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(0,70,42,0.12); }
+
+  .family-field { display: none; }
+  .family-field.show { display: block; }
+
+  .btn-primary {
+    width: 100%; padding: 13px;
+    background: var(--primary); color: #fff;
+    border: none; border-radius: var(--radius-sm);
+    font-size: 15px; font-weight: 600; font-family: inherit;
+    cursor: pointer; transition: all 0.2s; margin-top: 4px;
+    letter-spacing: 0.2px;
+  }
+  .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(21,101,192,0.35); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .auth-footer {
+    text-align: center; margin-top: 18px;
+    font-size: 13px; color: var(--text-muted);
+  }
+  .auth-footer a {
+    color: var(--primary); font-weight: 600; cursor: pointer; text-decoration: none;
+  }
+  .auth-footer a:hover { text-decoration: underline; }
+
+  /* ── COURSES PAGE ── */
+  .courses-wrap { padding: 32px 24px; max-width: 1100px; margin: 0 auto; }
+  .page-title { font-size: 22px; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.3px; }
+
+  /* Filter panel */
+  .filter-panel {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px 24px 16px;
+    box-shadow: var(--shadow-sm); margin-bottom: 24px;
+  }
+  .filter-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 14px; align-items: end;
+  }
+  @media(max-width:900px) { .filter-grid { grid-template-columns: 1fr 1fr; } }
+  .filter-group label {
+    display: block; font-size: 12px; font-weight: 600;
+    color: var(--text-secondary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .filter-row2 {
+    display: flex; gap: 14px; align-items: center; margin-top: 14px;
+  }
+  .filter-row2 .filter-group { flex: 0 0 200px; }
+  .checkbox-label {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--text-secondary); cursor: pointer;
+    user-select: none; padding-top: 4px;
+  }
+  .checkbox-label input { accent-color: var(--primary); width: 15px; height: 15px; cursor: pointer; }
+  .btn-search {
+    padding: 11px 32px;
+    background: var(--primary); color: #fff;
+    border: none; border-radius: var(--radius-sm);
+    font-size: 14px; font-weight: 600; font-family: inherit;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 6px;
+    margin-left: auto;
+  }
+  .btn-search:hover { background: var(--primary-dark); box-shadow: 0 3px 10px rgba(21,101,192,0.3); }
+  .search-dot { width: 8px; height: 8px; background: #fff; border-radius: 50%; }
+
+  /* Results */
+  .results-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px;
+  }
+  .results-count { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+  .results-count strong { color: var(--primary); }
+
+  .courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 16px;
+  }
+
+  /* Course Card */
+  .course-card {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s; position: relative; overflow: hidden;
+  }
+  .course-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: #B2D8C4; }
+  .course-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--primary);
+  }
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .course-name { font-size: 15px; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
+  .badge {
+    font-size: 11px; font-weight: 600; padding: 3px 8px;
+    border-radius: 20px; white-space: nowrap; flex-shrink: 0; margin-left: 8px;
+  }
+  .badge-beginner { background: #E8F5E9; color: #2E7D32; }
+  .badge-mid { background: #FFF3E0; color: #E65100; }
+  .badge-adv { background: #FCE4EC; color: #AD1457; }
+  .badge-full { background: #FFEBEE; color: var(--danger); }
+  .badge-closing { background: #FFF8E1; color: var(--warning); }
+  .badge-active { background: var(--primary-bg); color: var(--primary); }
+
+  .card-meta { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
+  .card-meta .icon { font-size: 13px; }
+
+  .seat-bar-wrap { margin: 12px 0 4px; }
+  .seat-bar-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+  .seat-bar { height: 5px; background: #ECEFF1; border-radius: 3px; overflow: hidden; }
+  .seat-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+  .fill-ok { background: var(--primary); }
+  .fill-warn { background: var(--warning); }
+  .fill-full { background: var(--danger); }
+
+  .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; }
+  .course-price { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+  .course-price span { font-size: 12px; font-weight: 400; color: var(--text-muted); }
+
+  .btn-apply {
+    padding: 8px 18px;
+    background: var(--primary); color: #fff;
+    border: none; border-radius: var(--radius-sm);
+    font-size: 13px; font-weight: 600; font-family: inherit;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-apply:hover { background: var(--primary-dark); }
+  .btn-apply.disabled {
+    background: #ECEFF1; color: var(--text-muted); cursor: not-allowed;
+  }
+  .btn-apply.closing {
+    background: #FFF3E0; color: var(--warning); border: 1px solid var(--warning);
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center; padding: 60px 20px; color: var(--text-muted);
+    font-size: 14px;
+  }
+  .empty-icon { font-size: 40px; margin-bottom: 12px; }
+
+  /* Modal */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.45); backdrop-filter: blur(2px);
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: #fff; border-radius: var(--radius-lg);
+    padding: 32px; width: 100%; max-width: 400px;
+    box-shadow: var(--shadow-lg);
+    animation: modalIn 0.25s ease;
+  }
+  @keyframes modalIn { from { opacity:0; transform: translateY(16px) scale(0.97); } to { opacity:1; transform: none; } }
+  .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .modal-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6; }
+  .modal-detail { background: var(--bg-page); border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 20px; }
+  .modal-detail-row { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; }
+  .modal-detail-row .label { color: var(--text-secondary); }
+  .modal-detail-row .val { font-weight: 600; }
+  .modal-btns { display: flex; gap: 10px; }
+  .btn-cancel-modal {
+    flex: 1; padding: 11px; border: 1.5px solid var(--border);
+    background: #fff; color: var(--text-secondary);
+    border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; font-family: inherit;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-cancel-modal:hover { border-color: #B0BEC5; background: #F5F5F5; }
+  .btn-confirm-modal {
+    flex: 2; padding: 11px;
+    background: var(--primary); color: #fff; border: none;
+    border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; font-family: inherit;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-confirm-modal:hover { background: var(--primary-dark); }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: #263238; color: #fff;
+    padding: 12px 24px; border-radius: 8px;
+    font-size: 13px; font-weight: 500;
+    opacity: 0; transition: all 0.3s; z-index: 300;
+    white-space: nowrap; pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.success { background: var(--success); }
+  .toast.error { background: var(--danger); }
+
+  /* Animations */
+  @keyframes fadeIn { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: none; } }
+  .course-card { animation: fadeIn 0.3s ease both; }
+</style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ── -->
+<nav>
+  <div class="nav-logo" onclick="goPage('courses')">
+    <img src="data:image/png;base64,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" style="height:32px;width:32px;object-fit:contain;vertical-align:middle;margin-right:2px"> GX 프로그램 수강신청 시스템
+  </div>
+  <div class="nav-right" id="navRight">
+    <button class="nav-btn" onclick="goPage('courses')">강좌 검색</button>
+    <button class="nav-btn primary-nav" onclick="goPage('login')">로그인</button>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════
+     PAGE 1: LOGIN + SIGNUP (탭 방식)
+════════════════════════════════════════ -->
+<div class="page active" id="page-login">
+  <div class="auth-wrap">
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">로그인</button>
+      <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">회원가입</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div class="auth-card" id="form-login">
+      <h2 class="auth-title">로그인</h2>
+      <div class="form-group">
+        <label class="form-label">학번</label>
+        <input class="form-input" type="text" placeholder="학번을 입력하세요" id="loginId" value="2612345">
+      </div>
+      <div class="form-group">
+        <label class="form-label">비밀번호</label>
+        <input class="form-input" type="password" placeholder="비밀번호를 입력하세요" id="loginPw" value="1234">
+      </div>
+      <button class="btn-primary" onclick="doLogin()">로그인</button>
+      <div class="auth-footer">
+        처음이신가요? <a onclick="switchTab('signup')">회원가입</a>
+      </div>
+    </div>
+
+    <!-- SIGNUP FORM -->
+    <div class="auth-card" id="form-signup" style="display:none">
+      <h2 class="auth-title">회원가입</h2>
+      <div class="form-group">
+        <label class="form-label">학번 <span class="req">*</span></label>
+        <input class="form-input" type="text" placeholder="학번을 입력하세요" id="signupId" value="2612345">
+      </div>
+      <div class="form-group">
+        <label class="form-label">비밀번호 <span class="req">*</span></label>
+        <input class="form-input" type="password" placeholder="비밀번호를 입력하세요" id="signupPw" value="1234">
+      </div>
+      <div class="form-group">
+        <label class="form-label">이름 <span class="req">*</span></label>
+        <input class="form-input" type="text" placeholder="이름을 입력하세요" id="signupName" value="이화인">
+      </div>
+      <div class="form-group">
+        <label class="form-label">전공</label>
+        <input class="form-input" type="text" placeholder="전공을 입력하세요 (선택)" id="signupMajor" value="컴퓨터공학과">
+      </div>
+      <div class="form-group">
+        <label class="form-label">회원 유형 <span class="req">*</span></label>
+        <select class="form-select" id="signupRole" onchange="onRoleChange()">
+          <option value="EWHA_STUDENT">이화 재학생</option>
+          <option value="ALUMNI">졸업생</option>
+          <option value="FACULTY">교직원</option>
+          <option value="EWHA_FAMILY">이화 가족</option>
+        </select>
+      </div>
+      <div class="form-group family-field" id="familyField">
+        <label class="form-label">직계가족 학번 <span class="req">*</span></label>
+        <input class="form-input" type="text" placeholder="직계가족 재학생의 학번을 입력하세요" id="signupFamily">
+      </div>
+      <button class="btn-primary" onclick="doSignup()">가입하기</button>
+      <div class="auth-footer">
+        이미 회원이신가요? <a onclick="switchTab('login')">로그인</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE 2: COURSE SEARCH
+════════════════════════════════════════ -->
+<div class="page" id="page-courses">
+  <div class="courses-wrap">
+    <h1 class="page-title">강좌 검색</h1>
+
+    <div class="filter-panel">
+      <div class="filter-grid">
+        <div class="filter-group">
+          <label>센터</label>
+          <select class="form-select" id="fCenter">
+            <option value="">전체</option>
+            <option value="ECC_FITNESS">ECC 피트니스</option>
+            <option value="FITNESS_ROOM">학생문화관</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>종목</label>
+          <select class="form-select" id="fCategory">
+            <option value="">전체</option>
+            <option value="HEALTH">헬스</option>
+            <option value="GX">G.X</option>
+            <option value="SMALL_GROUP">소그룹</option>
+            <option value="SPORTS_CLIMBING">스포츠클라이밍</option>
+            <option value="GOLF">골프</option>
+            <option value="SQUASH">스쿼시</option>
+            <option value="TENNIS">테니스</option>
+            <option value="TABLE_TENNIS">탁구</option>
+            <option value="ONE_TIME_PASS">1일 이용권</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>요일 (예: 월)</label>
+          <input class="form-input" type="text" placeholder="예: 월" id="fDay">
+        </div>
+        <div class="filter-group">
+          <label>시작시간 (부터)</label>
+          <input class="form-input" type="time" id="fTimeFrom">
+        </div>
+        <div class="filter-group">
+          <label>시작시간 (까지)</label>
+          <input class="form-input" type="time" id="fTimeTo">
+        </div>
+      </div>
+      <div class="filter-row2">
+        <div class="filter-group">
+          <label>최대 금액</label>
+          <input class="form-input" type="number" placeholder="예: 50000" id="fPrice" step="1000">
+        </div>
+        <label class="checkbox-label">
+          <input type="checkbox" id="fAvail"> 잔여석 있는 강좌만
+        </label>
+        <button class="btn-search" onclick="doSearch()">
+          <span class="search-dot"></span> 검색
+        </button>
+      </div>
+    </div>
+
+    <div class="results-header">
+      <div class="results-count" id="resultsCount">검색 조건을 선택하고 검색 버튼을 눌러주세요.</div>
+    </div>
+
+    <div class="courses-grid" id="coursesGrid">
+      <!-- cards injected by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ── APPLY MODAL ── -->
+<div class="modal-overlay" id="applyModal">
+  <div class="modal">
+    <h3 class="modal-title">수강 신청</h3>
+    <p class="modal-desc">아래 강좌를 신청하시겠습니까?<br>결제는 신청·결제 화면에서 진행됩니다.</p>
+    <div class="modal-detail" id="modalDetail"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel-modal" onclick="closeModal()">취소</button>
+      <button class="btn-confirm-modal" onclick="confirmApply()">신청하기 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────
+const COURSES = [
+  { id:1, programName:'헬스 1개월권', name:'헬스 A반', center:'ECC_FITNESS', category:'HEALTH',
+    instructor:'이트레이너', dayOfWeek:'월수금', startTime:'09:00', endTime:'10:00',
+    maxCapacity:30, currentCapacity:10, availableSeats:20, price:50000, difficulty:null, status:'ACTIVE' },
+  { id:2, programName:'헬스 1개월권', name:'헬스 B반', center:'ECC_FITNESS', category:'HEALTH',
+    instructor:'김트레이너', dayOfWeek:'화목', startTime:'18:00', endTime:'19:00',
+    maxCapacity:25, currentCapacity:5, availableSeats:20, price:50000, difficulty:null, status:'ACTIVE' },
+  { id:3, programName:'G.X 주3회', name:'G.X 줌바 A', center:'ECC_FITNESS', category:'GX',
+    instructor:'박강사', dayOfWeek:'월수금', startTime:'10:00', endTime:'11:00',
+    maxCapacity:20, currentCapacity:20, availableSeats:0, price:40000, difficulty:'초급', status:'ACTIVE' },
+  { id:4, programName:'G.X 주3회', name:'G.X 필라테스', center:'ECC_FITNESS', category:'GX',
+    instructor:'최강사', dayOfWeek:'화목토', startTime:'14:00', endTime:'15:00',
+    maxCapacity:15, currentCapacity:8, availableSeats:7, price:40000, difficulty:'초급', status:'ACTIVE' },
+  { id:5, programName:'스쿼시 소그룹', name:'스쿼시 소그룹 A', center:'FITNESS_ROOM', category:'SQUASH',
+    instructor:'정코치', dayOfWeek:'월금', startTime:'16:00', endTime:'17:00',
+    maxCapacity:8, currentCapacity:3, availableSeats:5, price:60000, difficulty:'중급', status:'ACTIVE' },
+  { id:6, programName:'테니스 입문', name:'테니스 입문 A', center:'FITNESS_ROOM', category:'TENNIS',
+    instructor:'한코치', dayOfWeek:'화목', startTime:'09:00', endTime:'10:30',
+    maxCapacity:10, currentCapacity:9, availableSeats:1, price:55000, difficulty:'초급', status:'ACTIVE' },
+  { id:7, programName:'스포츠클라이밍', name:'클라이밍 중급', center:'ECC_FITNESS', category:'SPORTS_CLIMBING',
+    instructor:'윤강사', dayOfWeek:'수금', startTime:'17:00', endTime:'18:30',
+    maxCapacity:12, currentCapacity:2, availableSeats:10, price:70000, difficulty:'중급', status:'CANCELLED' },
+];
+
+const CENTER_LABEL = { ECC_FITNESS:'ECC 피트니스', FITNESS_ROOM:'학생문화관' };
+const CATEGORY_LABEL = {
+  HEALTH:'헬스', GX:'G.X', SMALL_GROUP:'소그룹', SPORTS_CLIMBING:'스포츠클라이밍',
+  GOLF:'골프', SQUASH:'스쿼시', TENNIS:'테니스', TABLE_TENNIS:'탁구', ONE_TIME_PASS:'1일 이용권'
+};
+
+let currentUser = null;
+let selectedCourse = null;
+let searched = false;
+
+// ── PAGE NAVIGATION ───────────────────────────────────────────
+function goPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  updateNav();
+}
+
+function updateNav() {
+  const nr = document.getElementById('navRight');
+  if (currentUser) {
+    nr.innerHTML = `
+      <button class="nav-btn" onclick="goPage('courses')">강좌 검색</button>
+      <button class="nav-btn" onclick="showToast('마이페이지는 팀원이 구현 중입니다.')">마이페이지</button>
+      <button class="nav-btn primary-nav" onclick="doLogout()">${currentUser.name} 로그아웃</button>`;
+  } else {
+    nr.innerHTML = `
+      <button class="nav-btn" onclick="goPage('courses')">강좌 검색</button>
+      <button class="nav-btn primary-nav" onclick="goPage('login')">로그인</button>`;
+  }
+}
+
+// ── TAB SWITCHER ──────────────────────────────────────────────
+function switchTab(tab) {
+  document.getElementById('tab-login').classList.toggle('active', tab==='login');
+  document.getElementById('tab-signup').classList.toggle('active', tab==='signup');
+  document.getElementById('form-login').style.display = tab==='login' ? 'block' : 'none';
+  document.getElementById('form-signup').style.display = tab==='signup' ? 'block' : 'none';
+}
+
+function onRoleChange() {
+  const role = document.getElementById('signupRole').value;
+  document.getElementById('familyField').classList.toggle('show', role === 'EWHA_FAMILY');
+}
+
+// ── AUTH ──────────────────────────────────────────────────────
+function doLogin() {
+  const id = document.getElementById('loginId').value.trim();
+  const pw = document.getElementById('loginPw').value.trim();
+  if (!id || !pw) { showToast('학번과 비밀번호를 입력해주세요.', 'error'); return; }
+  // Demo: accept any credentials
+  currentUser = { studentId: id, name: '이화인', role: 'EWHA_STUDENT', major: '컴퓨터공학과' };
+  showToast('로그인되었습니다.', 'success');
+  setTimeout(() => goPage('courses'), 600);
+}
+
+function doSignup() {
+  const id = document.getElementById('signupId').value.trim();
+  const pw = document.getElementById('signupPw').value.trim();
+  const name = document.getElementById('signupName').value.trim();
+  const role = document.getElementById('signupRole').value;
+  const family = document.getElementById('signupFamily').value.trim();
+  if (!id || !pw || !name) { showToast('필수 항목을 입력해주세요.', 'error'); return; }
+  if (role === 'EWHA_FAMILY' && !family) { showToast('직계가족 학번을 입력해주세요.', 'error'); return; }
+  currentUser = { studentId: id, name, role, major: document.getElementById('signupMajor').value.trim() };
+  showToast('회원가입이 완료되었습니다!', 'success');
+  setTimeout(() => goPage('courses'), 700);
+}
+
+function doLogout() {
+  currentUser = null;
+  updateNav();
+  goPage('login');
+  showToast('로그아웃되었습니다.');
+}
+
+// ── COURSE SEARCH ─────────────────────────────────────────────
+function doSearch() {
+  searched = true;
+  const center   = document.getElementById('fCenter').value;
+  const category = document.getElementById('fCategory').value;
+  const day      = document.getElementById('fDay').value.trim();
+  const timeFrom = document.getElementById('fTimeFrom').value;
+  const timeTo   = document.getElementById('fTimeTo').value;
+  const maxPrice = parseInt(document.getElementById('fPrice').value) || Infinity;
+  const availOnly = document.getElementById('fAvail').checked;
+
+  const results = COURSES.filter(c => {
+    if (c.status === 'CANCELLED') return false;
+    if (center   && c.center !== center)     return false;
+    if (category && c.category !== category) return false;
+    if (day      && !c.dayOfWeek.includes(day)) return false;
+    if (timeFrom && c.startTime < timeFrom)  return false;
+    if (timeTo   && c.startTime > timeTo)    return false;
+    if (c.price > maxPrice)                  return false;
+    if (availOnly && c.availableSeats <= 0)  return false;
+    return true;
+  });
+
+  renderCourses(results);
+}
+
+function renderCourses(list) {
+  const grid = document.getElementById('coursesGrid');
+  const countEl = document.getElementById('resultsCount');
+
+  if (!searched) {
+    countEl.innerHTML = '검색 조건을 선택하고 검색 버튼을 눌러주세요.';
+    grid.innerHTML = '';
+    return;
+  }
+
+  countEl.innerHTML = `총 <strong>${list.length}개</strong>의 강좌가 검색되었습니다.`;
+
+  if (list.length === 0) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+      <div class="empty-icon">🔍</div>
+      조건에 맞는 강좌가 없습니다.<br>필터를 조정해 다시 검색해보세요.
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = list.map((c, i) => {
+    const ratio = c.currentCapacity / c.maxCapacity;
+    const pct = Math.round(ratio * 100);
+    const isFull = c.availableSeats <= 0;
+    const isClosing = !isFull && pct >= 90;
+    const fillClass = isFull ? 'fill-full' : isClosing ? 'fill-warn' : 'fill-ok';
+
+    const diffBadge = c.difficulty
+      ? `<span class="badge ${c.difficulty==='초급'?'badge-beginner':c.difficulty==='중급'?'badge-mid':'badge-adv'}">${c.difficulty}</span>` : '';
+
+    const statusBadge = isFull
+      ? `<span class="badge badge-full">마감</span>`
+      : isClosing
+        ? `<span class="badge badge-closing">마감임박</span>`
+        : `<span class="badge badge-active">신청가능</span>`;
+
+    const applyBtn = isFull
+      ? `<button class="btn-apply disabled" disabled>마감</button>`
+      : `<button class="btn-apply ${isClosing?'closing':''}" onclick="openApplyModal(${c.id})">신청하기</button>`;
+
+    return `
+    <div class="course-card" style="animation-delay:${i*0.05}s">
+      <div class="card-header">
+        <div>
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:3px">
+            ${CATEGORY_LABEL[c.category]||c.category} · ${CENTER_LABEL[c.center]||c.center}
+          </div>
+          <div class="course-name">${c.name}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          ${statusBadge}${diffBadge}
+        </div>
+      </div>
+      <div class="card-meta"><span class="icon">📅</span> ${c.dayOfWeek} | ${c.startTime} – ${c.endTime}</div>
+      <div class="card-meta"><span class="icon">👤</span> ${c.instructor}</div>
+      <div class="seat-bar-wrap">
+        <div class="seat-bar-label">
+          <span>신청 ${c.currentCapacity}명 / 정원 ${c.maxCapacity}명</span>
+          <span style="color:${isFull?'var(--danger)':isClosing?'var(--warning)':'var(--primary)'}">
+            잔여 ${c.availableSeats}석 (${pct}%)
+          </span>
+        </div>
+        <div class="seat-bar">
+          <div class="seat-bar-fill ${fillClass}" style="width:${pct}%"></div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="course-price">${c.price.toLocaleString()}<span>원</span></div>
+        ${applyBtn}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── APPLY MODAL ───────────────────────────────────────────────
+function openApplyModal(courseId) {
+  if (!currentUser) {
+    showToast('로그인 후 신청할 수 있습니다.', 'error');
+    setTimeout(() => goPage('login'), 800);
+    return;
+  }
+  selectedCourse = COURSES.find(c => c.id === courseId);
+  if (!selectedCourse) return;
+
+  document.getElementById('modalDetail').innerHTML = `
+    <div class="modal-detail-row"><span class="label">강좌명</span><span class="val">${selectedCourse.name}</span></div>
+    <div class="modal-detail-row"><span class="label">요일 · 시간</span><span class="val">${selectedCourse.dayOfWeek} | ${selectedCourse.startTime}–${selectedCourse.endTime}</span></div>
+    <div class="modal-detail-row"><span class="label">강사</span><span class="val">${selectedCourse.instructor}</span></div>
+    <div class="modal-detail-row"><span class="label">잔여석</span><span class="val">${selectedCourse.availableSeats}석</span></div>
+    <div class="modal-detail-row"><span class="label">금액</span><span class="val" style="color:var(--primary)">${selectedCourse.price.toLocaleString()}원</span></div>
+  `;
+  document.getElementById('applyModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('applyModal').classList.remove('open');
+  selectedCourse = null;
+}
+
+function confirmApply() {
+  if (!selectedCourse) return;
+  const courseName = selectedCourse.name;
+  closeModal();
+  showToast(`"${courseName}" 신청이 완료되었습니다! 결제 화면으로 이동하세요.`, 'success');
+}
+
+// ── TOAST ─────────────────────────────────────────────────────
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type ? ' '+type : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Close modal on overlay click
+document.getElementById('applyModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// Initial render
+updateNav();
+</script>
+</body>
+</html>
