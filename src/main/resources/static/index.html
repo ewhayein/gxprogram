@@ -310,6 +310,7 @@
         <div><div class="info-label">학번</div><div class="info-value" id="mp-student-id">-</div></div>
         <div><div class="info-label">전공</div><div class="info-value" id="mp-major">-</div></div>
         <div><div class="info-label">회원 유형</div><div class="info-value" id="mp-role">-</div></div>
+        <div><div class="info-label">계좌 잔액</div><div class="info-value" id="mp-balance">-</div></div>
       </div>
     </div>
     <div class="mp-card">
@@ -610,6 +611,7 @@
               document.getElementById('mp-student-id').textContent = data.studentId || '-';
               document.getElementById('mp-major').textContent      = data.major     || '-';
               document.getElementById('mp-role').textContent       = getRoleLabel(data.role);
+              document.getElementById('mp-balance').textContent    = data.accountBalance != null ? data.accountBalance.toLocaleString() + '원' : '계좌 없음';
               if (currentUser) { currentUser.name = data.name; updateNav(); }
               allHistories = data.applyHistories || [];
               document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
