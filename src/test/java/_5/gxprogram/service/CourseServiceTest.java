@@ -19,8 +19,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 
 class CourseServiceTest {
-    @Mock
-    CourseRepository courseRepository;
 
     @InjectMocks
     CourseService courseService;
