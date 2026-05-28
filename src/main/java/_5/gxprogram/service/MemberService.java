@@ -12,6 +12,7 @@ import _5.gxprogram.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final ApplyRepository applyRepository;
+    private final PasswordEncoder passwordEncoder;
 
     private static final DateTimeFormatter DT_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     private static final DateTimeFormatter D_FMT  = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -35,7 +37,7 @@ public class MemberService {
         }
         member newMember = member.builder()
                 .studentId(dto.getStudentId())
-                .password(dto.getPassword())
+                .password(passwordEncoder.encode(dto.getPassword()))   // 🔥 평문 → 암호화
                 .name(dto.getName())
                 .major(dto.getMajor())
                 .familyName(dto.getFamilyName())
@@ -49,7 +51,7 @@ public class MemberService {
     public Long login(LoginRequestDTO dto) {
         member found = memberRepository.findByStudentId(dto.getStudentId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 학번입니다."));
-        if (!found.getPassword().equals(dto.getPassword())) {
+        if (!passwordEncoder.matches(dto.getPassword(), found.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
         if (found.getStatus() != memberStatus.ACTIVE) {
