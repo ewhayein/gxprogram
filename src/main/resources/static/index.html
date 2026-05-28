@@ -253,8 +253,16 @@
           </select>
         </div>
         <div class="filter-group">
-          <label>요일 (예: 월)</label>
-          <input class="form-input" type="text" placeholder="예: 월" id="fDay">
+          <label>요일</label>
+          <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:4px;">
+            <label class="checkbox-label"><input type="checkbox" value="월"> 월</label>
+            <label class="checkbox-label"><input type="checkbox" value="화"> 화</label>
+            <label class="checkbox-label"><input type="checkbox" value="수"> 수</label>
+            <label class="checkbox-label"><input type="checkbox" value="목"> 목</label>
+            <label class="checkbox-label"><input type="checkbox" value="금"> 금</label>
+            <label class="checkbox-label"><input type="checkbox" value="토"> 토</label>
+            <label class="checkbox-label"><input type="checkbox" value="일"> 일</label>
+          </div>
         </div>
         <div class="filter-group">
           <label>시작시간 (부터)</label>
@@ -453,7 +461,7 @@
     const params = new URLSearchParams();
     const center   = document.getElementById('fCenter').value;
     const categories = [...document.querySelectorAll('.category-btn.active')].map(b => b.dataset.value);
-    const day      = document.getElementById('fDay').value.trim();
+    const day    = [...document.querySelectorAll('.filter-group input[type="checkbox"]:checked')].filter(cb => ['월','화','수','목','금','토','일'].includes(cb.value)).map(cb => cb.value).join(',');
     const timeFrom = document.getElementById('fTimeFrom').value;
     const timeTo   = document.getElementById('fTimeTo').value;
     const maxPrice = document.getElementById('fPrice').value;
