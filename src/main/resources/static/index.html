@@ -1,166 +1,172 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GX 프로그램 수강신청</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --primary: #00462A; --primary-light: #005934; --primary-dark: #002E1B; --primary-bg: #E6F2ED;
-    --danger: #D32F2F; --success: #2E7D32; --warning: #F57C00;
-    --text-primary: #1A1A2E; --text-secondary: #546E7A; --text-muted: #90A4AE;
-    --border: #CFD8DC; --border-focus: #00462A;
-    --bg-page: #F0F4F8; --bg-card: #FFFFFF; --bg-input: #F8FAFC;
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08); --shadow-md: 0 4px 16px rgba(0,0,0,0.10); --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
-    --radius: 10px; --radius-sm: 6px; --radius-lg: 16px; --nav-h: 56px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); color: var(--text-primary); min-height: 100vh; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GX 프로그램 수강신청</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #00462A; --primary-light: #005934; --primary-dark: #002E1B; --primary-bg: #E6F2ED;
+      --danger: #D32F2F; --success: #2E7D32; --warning: #F57C00;
+      --text-primary: #1A1A2E; --text-secondary: #546E7A; --text-muted: #90A4AE;
+      --border: #CFD8DC; --border-focus: #00462A;
+      --bg-page: #F0F4F8; --bg-card: #FFFFFF; --bg-input: #F8FAFC;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08); --shadow-md: 0 4px 16px rgba(0,0,0,0.10); --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+      --radius: 10px; --radius-sm: 6px; --radius-lg: 16px; --nav-h: 56px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); color: var(--text-primary); min-height: 100vh; }
 
-  /* NAV */
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--nav-h); background: var(--primary); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-  .nav-logo { display: flex; align-items: center; gap: 8px; color: #fff; font-weight: 700; font-size: 17px; cursor: pointer; }
-  .nav-right { display: flex; gap: 8px; }
-  .nav-btn { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 6px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; font-family: inherit; cursor: pointer; transition: all 0.2s; }
-  .nav-btn:hover { background: rgba(255,255,255,0.25); }
-  .nav-btn.primary-nav { background: #fff; color: var(--primary); border-color: #fff; }
-  .nav-btn.primary-nav:hover { background: #E6F2ED; }
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--nav-h); background: var(--primary); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+    .nav-logo { display: flex; align-items: center; gap: 8px; color: #fff; font-weight: 700; font-size: 17px; cursor: pointer; }
+    .nav-right { display: flex; gap: 8px; }
+    .nav-btn { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 6px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; font-family: inherit; cursor: pointer; transition: all 0.2s; }
+    .nav-btn:hover { background: rgba(255,255,255,0.25); }
+    .nav-btn.primary-nav { background: #fff; color: var(--primary); border-color: #fff; }
+    .nav-btn.primary-nav:hover { background: #E6F2ED; }
 
-  /* PAGE */
-  .page { display: none; min-height: 100vh; padding-top: var(--nav-h); }
-  .page.active { display: block; }
+    /* PAGE */
+    .page { display: none; min-height: 100vh; padding-top: var(--nav-h); }
+    .page.active { display: block; }
 
-  /* AUTH */
-  .auth-wrap { min-height: calc(100vh - var(--nav-h)); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 16px; }
-  .auth-tabs { display: flex; background: #fff; border-radius: var(--radius-lg) var(--radius-lg) 0 0; border: 1px solid var(--border); border-bottom: none; width: 100%; max-width: 460px; overflow: hidden; box-shadow: var(--shadow-sm); }
-  .auth-tab { flex: 1; padding: 14px; text-align: center; font-size: 14px; font-weight: 600; color: var(--text-muted); cursor: pointer; border: none; background: transparent; font-family: inherit; transition: all 0.2s; border-bottom: 3px solid transparent; }
-  .auth-tab.active { color: var(--primary); border-bottom-color: var(--primary); background: var(--primary-bg); }
-  .auth-tab:hover:not(.active) { background: #F5F5F5; color: var(--text-secondary); }
-  .auth-card { background: var(--bg-card); border: 1px solid var(--border); border-top: none; border-radius: 0 0 var(--radius-lg) var(--radius-lg); padding: 32px 36px 36px; width: 100%; max-width: 460px; box-shadow: var(--shadow-md); }
-  .auth-title { font-size: 22px; font-weight: 700; color: var(--text-primary); margin-bottom: 24px; letter-spacing: -0.3px; }
-  .form-group { margin-bottom: 18px; }
-  .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
-  .form-label .req { color: var(--danger); margin-left: 2px; }
-  .form-input { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; font-family: inherit; background: var(--bg-input); color: var(--text-primary); transition: all 0.2s; outline: none; }
-  .form-input:focus { border-color: var(--border-focus); background: #fff; box-shadow: 0 0 0 3px rgba(0,70,42,0.12); }
-  .form-input::placeholder { color: var(--text-muted); }
-  .form-select { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; font-family: inherit; background: var(--bg-input); color: var(--text-primary); cursor: pointer; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2390A4AE' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; transition: border-color 0.2s; }
-  .form-select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(0,70,42,0.12); }
-  .family-field { display: none; }
-  .family-field.show { display: block; }
-  .btn-primary { width: 100%; padding: 13px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s; margin-top: 4px; }
-  .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
-  .btn-primary:active { transform: translateY(0); }
-  .auth-footer { text-align: center; margin-top: 18px; font-size: 13px; color: var(--text-muted); }
-  .auth-footer a { color: var(--primary); font-weight: 600; cursor: pointer; text-decoration: none; }
-  .auth-footer a:hover { text-decoration: underline; }
+    /* AUTH */
+    .auth-wrap { min-height: calc(100vh - var(--nav-h)); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 16px; }
+    .auth-tabs { display: flex; background: #fff; border-radius: var(--radius-lg) var(--radius-lg) 0 0; border: 1px solid var(--border); border-bottom: none; width: 100%; max-width: 460px; overflow: hidden; box-shadow: var(--shadow-sm); }
+    .auth-tab { flex: 1; padding: 14px; text-align: center; font-size: 14px; font-weight: 600; color: var(--text-muted); cursor: pointer; border: none; background: transparent; font-family: inherit; transition: all 0.2s; border-bottom: 3px solid transparent; }
+    .auth-tab.active { color: var(--primary); border-bottom-color: var(--primary); background: var(--primary-bg); }
+    .auth-tab:hover:not(.active) { background: #F5F5F5; color: var(--text-secondary); }
+    .auth-card { background: var(--bg-card); border: 1px solid var(--border); border-top: none; border-radius: 0 0 var(--radius-lg) var(--radius-lg); padding: 32px 36px 36px; width: 100%; max-width: 460px; box-shadow: var(--shadow-md); }
+    .auth-title { font-size: 22px; font-weight: 700; color: var(--text-primary); margin-bottom: 24px; letter-spacing: -0.3px; }
+    .form-group { margin-bottom: 18px; }
+    .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
+    .form-label .req { color: var(--danger); margin-left: 2px; }
+    .form-input { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; font-family: inherit; background: var(--bg-input); color: var(--text-primary); transition: all 0.2s; outline: none; }
+    .form-input:focus { border-color: var(--border-focus); background: #fff; box-shadow: 0 0 0 3px rgba(0,70,42,0.12); }
+    .form-input::placeholder { color: var(--text-muted); }
+    .form-select { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; font-family: inherit; background: var(--bg-input); color: var(--text-primary); cursor: pointer; outline: none; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2390A4AE' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; transition: border-color 0.2s; }
+    .form-select:focus { border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(0,70,42,0.12); }
+    .family-field { display: none; }
+    .family-field.show { display: block; }
+    .btn-primary { width: 100%; padding: 13px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s; margin-top: 4px; }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+    .auth-footer { text-align: center; margin-top: 18px; font-size: 13px; color: var(--text-muted); }
+    .auth-footer a { color: var(--primary); font-weight: 600; cursor: pointer; text-decoration: none; }
+    .auth-footer a:hover { text-decoration: underline; }
 
-  /* COURSES */
-  .courses-wrap { padding: 32px 24px; max-width: 1100px; margin: 0 auto; }
-  .page-title { font-size: 22px; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.3px; }
-  .filter-panel { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px 16px; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
-  .filter-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 14px; align-items: end; }
-  .filter-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .filter-row2 { display: flex; gap: 14px; align-items: center; margin-top: 14px; }
-  .filter-row2 .filter-group { flex: 0 0 200px; }
-  .checkbox-label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); cursor: pointer; user-select: none; padding-top: 4px; }
-  .checkbox-label input { accent-color: var(--primary); width: 15px; height: 15px; cursor: pointer; }
-  .btn-search { padding: 11px 32px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; margin-left: auto; }
-  .btn-search:hover { background: var(--primary-dark); }
-  .search-dot { width: 8px; height: 8px; background: #fff; border-radius: 50%; }
-  .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-  .results-count { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
-  .results-count strong { color: var(--primary); }
-  .courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 16px; }
-  .course-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-sm); transition: all 0.2s; position: relative; overflow: hidden; animation: fadeIn 0.3s ease both; }
-  .course-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: #B2D8C4; }
-  .course-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--primary); }
-  .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-  .course-name { font-size: 15px; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
-  .badge { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; margin-left: 8px; }
-  .badge-beginner { background: #E8F5E9; color: #2E7D32; }
-  .badge-mid { background: #FFF3E0; color: #E65100; }
-  .badge-adv { background: #FCE4EC; color: #AD1457; }
-  .badge-full { background: #FFEBEE; color: var(--danger); }
-  .badge-closing { background: #FFF8E1; color: var(--warning); }
-  .badge-active { background: var(--primary-bg); color: var(--primary); }
-  .badge-pending { background: #FFF8E1; color: #F57F17; border: 1px solid #FFE082; }
-  .badge-complete { background: var(--primary-bg); color: var(--primary); border: 1px solid #A5D6A7; }
-  .badge-cancelled { background: #FFEBEE; color: var(--danger); border: 1px solid #EF9A9A; }
-  .badge-refunded { background: #F5F5F5; color: #757575; border: 1px solid #E0E0E0; }
-  .card-meta { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
-  .seat-bar-wrap { margin: 12px 0 4px; }
-  .seat-bar-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
-  .seat-bar { height: 5px; background: #ECEFF1; border-radius: 3px; overflow: hidden; }
-  .seat-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
-  .fill-ok { background: var(--primary); }
-  .fill-warn { background: var(--warning); }
-  .fill-full { background: var(--danger); }
-  .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; }
-  .course-price { font-size: 16px; font-weight: 700; color: var(--text-primary); }
-  .course-price span { font-size: 12px; font-weight: 400; color: var(--text-muted); }
-  .btn-apply { padding: 8px 18px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s; }
-  .btn-apply:hover { background: var(--primary-dark); }
-  .btn-apply.disabled { background: #ECEFF1; color: var(--text-muted); cursor: not-allowed; }
-  .btn-apply.closing { background: #FFF3E0; color: var(--warning); border: 1px solid var(--warning); }
-  .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 14px; }
+    /* COURSES */
+    .courses-wrap { padding: 32px 24px; max-width: 1100px; margin: 0 auto; }
+    .page-title { font-size: 22px; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.3px; }
+    .filter-panel { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px 16px; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
+    .filter-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 14px; align-items: end; }
+    .filter-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .filter-row2 { display: flex; gap: 14px; align-items: center; margin-top: 14px; }
+    .filter-row2 .filter-group { flex: 0 0 200px; }
+    .checkbox-label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); cursor: pointer; user-select: none; padding-top: 4px; }
+    .checkbox-label input { accent-color: var(--primary); width: 15px; height: 15px; cursor: pointer; }
+    .btn-search { padding: 11px 32px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; margin-left: auto; }
+    .btn-search:hover { background: var(--primary-dark); }
+    .search-dot { width: 8px; height: 8px; background: #fff; border-radius: 50%; }
+    .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .results-count { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
+    .results-count strong { color: var(--primary); }
+    .courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 16px; }
+    .course-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-sm); transition: all 0.2s; position: relative; overflow: hidden; animation: fadeIn 0.3s ease both; }
+    .course-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: #B2D8C4; }
+    .course-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--primary); }
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .course-name { font-size: 15px; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
+    .badge { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; margin-left: 8px; }
+    .badge-beginner { background: #E8F5E9; color: #2E7D32; }
+    .badge-mid { background: #FFF3E0; color: #E65100; }
+    .badge-adv { background: #FCE4EC; color: #AD1457; }
+    .badge-full { background: #FFEBEE; color: var(--danger); }
+    .badge-closing { background: #FFF8E1; color: var(--warning); }
+    .badge-active { background: var(--primary-bg); color: var(--primary); }
+    .badge-pending { background: #FFF8E1; color: #F57F17; border: 1px solid #FFE082; }
+    .badge-complete { background: var(--primary-bg); color: var(--primary); border: 1px solid #A5D6A7; }
+    .badge-cancelled { background: #FFEBEE; color: var(--danger); border: 1px solid #EF9A9A; }
+    .badge-refunded { background: #F5F5F5; color: #757575; border: 1px solid #E0E0E0; }
+    .card-meta { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
+    .seat-bar-wrap { margin: 12px 0 4px; }
+    .seat-bar-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+    .seat-bar { height: 5px; background: #ECEFF1; border-radius: 3px; overflow: hidden; }
+    .seat-bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+    .fill-ok { background: var(--primary); }
+    .fill-warn { background: var(--warning); }
+    .fill-full { background: var(--danger); }
+    .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; }
+    .course-price { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+    .course-price span { font-size: 12px; font-weight: 400; color: var(--text-muted); }
+    .btn-apply { padding: 8px 18px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s; }
+    .btn-apply:hover { background: var(--primary-dark); }
+    .btn-apply.disabled { background: #ECEFF1; color: var(--text-muted); cursor: not-allowed; }
+    .btn-apply.closing { background: #FFF3E0; color: var(--warning); border: 1px solid var(--warning); }
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 14px; }
 
-  /* MYPAGE */
-  .mypage-wrap { padding: 32px 24px; max-width: 900px; margin: 0 auto; }
-  .mp-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
-  .mp-card-title { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid #ECEFF1; }
-  .member-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-  .member-grid .info-label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-  .member-grid .info-value { font-size: 14px; font-weight: 600; color: var(--text-primary); }
-  .tab-row { display: flex; border-bottom: 2px solid #ECEFF1; margin-bottom: 16px; }
-  .tab-btn { background: none; border: none; padding: 10px 20px; font-size: 14px; font-weight: 500; font-family: inherit; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
-  .tab-btn.active { color: var(--primary); font-weight: 700; border-bottom-color: var(--primary); }
-  .tab-btn:hover:not(.active) { color: var(--text-secondary); }
-  .history-item { border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; }
-  .history-item:hover { box-shadow: var(--shadow-sm); border-color: #B2D8C4; }
-  .history-item:last-child { margin-bottom: 0; }
-  .history-left { flex: 1; }
-  .history-program { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
-  .history-info { font-size: 13px; color: var(--text-secondary); margin-bottom: 3px; }
-  .history-date { font-size: 12px; color: var(--text-muted); }
-  .history-right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-  .history-amount { font-size: 16px; font-weight: 700; color: var(--text-primary); }
-  .timer-badge { font-size: 12px; font-weight: 600; color: #E65100; background: #FFF3E0; padding: 4px 10px; border-radius: 20px; border: 1px solid #FFCC80; }
-  .timer-badge.expired { color: var(--danger); background: #FFEBEE; border-color: #EF9A9A; }
-  .btn-pay { padding: 8px 18px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s; }
-  .btn-pay:hover { background: var(--primary-dark); }
-  .btn-pay:disabled { background: #ECEFF1; color: var(--text-muted); cursor: not-allowed; }
-  .mp-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 14px; }
+    /* MYPAGE */
+    .mypage-wrap { padding: 32px 24px; max-width: 900px; margin: 0 auto; }
+    .mp-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
+    .mp-card-title { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid #ECEFF1; }
+    .member-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .member-grid .info-label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .member-grid .info-value { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+    .tab-row { display: flex; border-bottom: 2px solid #ECEFF1; margin-bottom: 16px; }
+    .tab-btn { background: none; border: none; padding: 10px 20px; font-size: 14px; font-weight: 500; font-family: inherit; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+    .tab-btn.active { color: var(--primary); font-weight: 700; border-bottom-color: var(--primary); }
+    .tab-btn:hover:not(.active) { color: var(--text-secondary); }
+    .history-item { border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; }
+    .history-item:hover { box-shadow: var(--shadow-sm); border-color: #B2D8C4; }
+    .history-item:last-child { margin-bottom: 0; }
+    .history-left { flex: 1; }
+    .history-program { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+    .history-info { font-size: 13px; color: var(--text-secondary); margin-bottom: 3px; }
+    .history-date { font-size: 12px; color: var(--text-muted); }
+    .history-right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+    .history-amount { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+    .timer-badge { font-size: 12px; font-weight: 600; color: #E65100; background: #FFF3E0; padding: 4px 10px; border-radius: 20px; border: 1px solid #FFCC80; }
+    .timer-badge.expired { color: var(--danger); background: #FFEBEE; border-color: #EF9A9A; }
+    .btn-pay { padding: 8px 18px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s; }
+    .btn-pay:hover { background: var(--primary-dark); }
+    .btn-pay:disabled { background: #ECEFF1; color: var(--text-muted); cursor: not-allowed; }
+    .mp-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 14px; }
 
-  /* MODAL */
-  .modal-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.45); backdrop-filter: blur(2px); align-items: center; justify-content: center; }
-  .modal-overlay.open { display: flex; }
-  .modal { background: #fff; border-radius: var(--radius-lg); padding: 32px; width: 100%; max-width: 400px; box-shadow: var(--shadow-lg); animation: modalIn 0.25s ease; }
-  @keyframes modalIn { from { opacity:0; transform: translateY(16px) scale(0.97); } to { opacity:1; transform: none; } }
-  .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
-  .modal-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6; }
-  .modal-detail { background: var(--bg-page); border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 20px; }
-  .modal-detail-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; }
-  .modal-detail-row .label { color: var(--text-secondary); }
-  .modal-detail-row .val { font-weight: 600; }
-  .modal-detail-row .val.highlight { color: var(--primary); font-size: 15px; }
-  .modal-divider { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
-  .modal-btns { display: flex; gap: 10px; }
-  .btn-cancel-modal { flex: 1; padding: 11px; border: 1.5px solid var(--border); background: #fff; color: var(--text-secondary); border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; font-family: inherit; cursor: pointer; transition: all 0.2s; }
-  .btn-cancel-modal:hover { background: #F5F5F5; }
-  .btn-confirm-modal { flex: 2; padding: 11px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s; }
-  .btn-confirm-modal:hover { background: var(--primary-dark); }
-  .btn-confirm-modal:disabled { background: #ECEFF1; color: var(--text-muted); cursor: not-allowed; }
+    /* MODAL */
+    .modal-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.45); backdrop-filter: blur(2px); align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: #fff; border-radius: var(--radius-lg); padding: 32px; width: 100%; max-width: 400px; box-shadow: var(--shadow-lg); animation: modalIn 0.25s ease; }
+    @keyframes modalIn { from { opacity:0; transform: translateY(16px) scale(0.97); } to { opacity:1; transform: none; } }
+    .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .modal-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6; }
+    .modal-detail { background: var(--bg-page); border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 20px; }
+    .modal-detail-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; }
+    .modal-detail-row .label { color: var(--text-secondary); }
+    .modal-detail-row .val { font-weight: 600; }
+    .modal-detail-row .val.highlight { color: var(--primary); font-size: 15px; }
+    .modal-divider { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
+    .modal-btns { display: flex; gap: 10px; }
+    .btn-cancel-modal { flex: 1; padding: 11px; border: 1.5px solid var(--border); background: #fff; color: var(--text-secondary); border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; font-family: inherit; cursor: pointer; transition: all 0.2s; }
+    .btn-cancel-modal:hover { background: #F5F5F5; }
+    .btn-confirm-modal { flex: 2; padding: 11px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s; }
+    .btn-confirm-modal:hover { background: var(--primary-dark); }
+    .btn-confirm-modal:disabled { background: #ECEFF1; color: var(--text-muted); cursor: not-allowed; }
 
-  /* TOAST */
-  .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px); background: #263238; color: #fff; padding: 12px 24px; border-radius: 8px; font-size: 13px; font-weight: 500; opacity: 0; transition: all 0.3s; z-index: 300; white-space: nowrap; pointer-events: none; }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-  .toast.success { background: var(--success); }
-  .toast.error { background: var(--danger); }
+    /* TOAST */
+    .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px); background: #263238; color: #fff; padding: 12px 24px; border-radius: 8px; font-size: 13px; font-weight: 500; opacity: 0; transition: all 0.3s; z-index: 300; white-space: nowrap; pointer-events: none; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.success { background: var(--success); }
+    .toast.error { background: var(--danger); }
 
-  @keyframes fadeIn { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: none; } }
-</style>
+    @keyframes fadeIn { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: none; } }
+
+    /* 종목 토글 버튼 */
+    .category-toggle-wrap { display: flex; flex-wrap: wrap; gap: 6px; }
+    .category-btn { padding: 5px 12px; border: 1.5px solid var(--border); border-radius: 20px; font-size: 12px; font-weight: 500; font-family: inherit; background: #fff; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+    .category-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .category-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+  </style>
 </head>
 <body>
 
@@ -247,21 +253,6 @@
           </select>
         </div>
         <div class="filter-group">
-          <label>종목</label>
-          <select class="form-select" id="fCategory">
-            <option value="">전체</option>
-            <option value="HEALTH">헬스</option>
-            <option value="GX">G.X</option>
-            <option value="SMALL_GROUP">소그룹</option>
-            <option value="SPORTS_CLIMBING">스포츠클라이밍</option>
-            <option value="GOLF">골프</option>
-            <option value="SQUASH">스쿼시</option>
-            <option value="TENNIS">테니스</option>
-            <option value="TABLE_TENNIS">탁구</option>
-            <option value="ONE_TIME_PASS">1일 이용권</option>
-          </select>
-        </div>
-        <div class="filter-group">
           <label>요일 (예: 월)</label>
           <input class="form-input" type="text" placeholder="예: 월" id="fDay">
         </div>
@@ -272,6 +263,20 @@
         <div class="filter-group">
           <label>시작시간 (까지)</label>
           <input class="form-input" type="time" id="fTimeTo">
+        </div>
+      </div>
+      <div style="margin-top: 14px;">
+        <div class="filter-group" style="margin-bottom: 8px;"><label>종목 (복수 선택 가능)</label></div>
+        <div class="category-toggle-wrap">
+          <button type="button" class="category-btn" data-value="HEALTH" onclick="toggleCategory(this)">헬스</button>
+          <button type="button" class="category-btn" data-value="GX" onclick="toggleCategory(this)">G.X</button>
+          <button type="button" class="category-btn" data-value="SMALL_GROUP" onclick="toggleCategory(this)">소그룹</button>
+          <button type="button" class="category-btn" data-value="SPORTS_CLIMBING" onclick="toggleCategory(this)">스포츠클라이밍</button>
+          <button type="button" class="category-btn" data-value="GOLF" onclick="toggleCategory(this)">골프</button>
+          <button type="button" class="category-btn" data-value="SQUASH" onclick="toggleCategory(this)">스쿼시</button>
+          <button type="button" class="category-btn" data-value="TENNIS" onclick="toggleCategory(this)">테니스</button>
+          <button type="button" class="category-btn" data-value="TABLE_TENNIS" onclick="toggleCategory(this)">탁구</button>
+          <button type="button" class="category-btn" data-value="ONE_TIME_PASS" onclick="toggleCategory(this)">1일 이용권</button>
         </div>
       </div>
       <div class="filter-row2">
@@ -349,144 +354,146 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const CENTER_LABEL = { ECC_FITNESS:'ECC 피트니스', FITNESS_ROOM:'학생문화관' };
-const CATEGORY_LABEL = { HEALTH:'헬스', GX:'G.X', SMALL_GROUP:'소그룹', SPORTS_CLIMBING:'스포츠클라이밍', GOLF:'골프', SQUASH:'스쿼시', TENNIS:'테니스', TABLE_TENNIS:'탁구', ONE_TIME_PASS:'1일 이용권' };
+  const CENTER_LABEL = { ECC_FITNESS:'ECC 피트니스', FITNESS_ROOM:'학생문화관' };
+  const CATEGORY_LABEL = { HEALTH:'헬스', GX:'G.X', SMALL_GROUP:'소그룹', SPORTS_CLIMBING:'스포츠클라이밍', GOLF:'골프', SQUASH:'스쿼시', TENNIS:'테니스', TABLE_TENNIS:'탁구', ONE_TIME_PASS:'1일 이용권' };
 
-let currentUser = null;
-let selectedCourse = null;
-let searched = false;
-let allHistories = [];
-let timers = {};
+  let currentUser = null;
+  let selectedCourse = null;
+  let searched = false;
+  let allHistories = [];
+  let timers = {};
 
-function goPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
-  updateNav();
-  if (name === 'mypage' && currentUser && currentUser.memberId) loadMyPage(currentUser.memberId);
-}
+  function goPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    updateNav();
+    if (name === 'mypage' && currentUser && currentUser.memberId) loadMyPage(currentUser.memberId);
+  }
 
-function updateNav() {
-  const nr = document.getElementById('navRight');
-  if (currentUser) {
-    nr.innerHTML = `
+  function updateNav() {
+    const nr = document.getElementById('navRight');
+    if (currentUser) {
+      nr.innerHTML = `
       <button class="nav-btn" onclick="goPage('courses')">강좌 검색</button>
       <button class="nav-btn" onclick="goPage('mypage')">마이페이지</button>
       <button class="nav-btn primary-nav" onclick="doLogout()">${currentUser.name} 로그아웃</button>`;
-  } else {
-    nr.innerHTML = `
+    } else {
+      nr.innerHTML = `
       <button class="nav-btn" onclick="goPage('courses')">강좌 검색</button>
       <button class="nav-btn primary-nav" onclick="goPage('login')">로그인</button>`;
-  }
-}
-
-function switchTab(tab) {
-  document.getElementById('tab-login').classList.toggle('active', tab==='login');
-  document.getElementById('tab-signup').classList.toggle('active', tab==='signup');
-  document.getElementById('form-login').style.display = tab==='login' ? 'block' : 'none';
-  document.getElementById('form-signup').style.display = tab==='signup' ? 'block' : 'none';
-}
-
-function onRoleChange() {
-  document.getElementById('familyField').classList.toggle('show', document.getElementById('signupRole').value === 'EWHA_FAMILY');
-}
-
-function doLogin() {
-  const studentId = document.getElementById('loginId').value.trim();
-  const password  = document.getElementById('loginPw').value.trim();
-  if (!studentId || !password) { showToast('학번과 비밀번호를 입력해주세요.', 'error'); return; }
-  fetch('/api/members/login', {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ studentId, password })
-  })
-  .then(res => res.json().then(data => ({ ok: res.ok, data })))
-  .then(({ ok, data }) => {
-    if (ok) {
-      currentUser = { studentId, name: studentId, memberId: data.memberId };
-      showToast('로그인되었습니다.', 'success');
-      setTimeout(() => goPage('courses'), 600);
-    } else {
-      showToast(data.message || '로그인 실패', 'error');
     }
-  })
-  .catch(() => showToast('서버 연결 오류', 'error'));
-}
+  }
 
-function doSignup() {
-  const studentId  = document.getElementById('signupId').value.trim();
-  const password   = document.getElementById('signupPw').value.trim();
-  const name       = document.getElementById('signupName').value.trim();
-  const major      = document.getElementById('signupMajor').value.trim();
-  const role       = document.getElementById('signupRole').value;
-  const familyName = document.getElementById('signupFamily').value.trim();
-  if (!studentId || !password || !name) { showToast('필수 항목을 입력해주세요.', 'error'); return; }
-  if (role === 'EWHA_FAMILY' && !familyName) { showToast('직계가족 학번을 입력해주세요.', 'error'); return; }
-  fetch('/api/members/signup', {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ studentId, password, name, major, role, familyName })
-  })
-  .then(res => res.json().then(data => ({ ok: res.ok, data })))
-  .then(({ ok, data }) => {
-    if (ok) { showToast('회원가입이 완료되었습니다!', 'success'); setTimeout(() => switchTab('login'), 700); }
-    else showToast(data.message || '회원가입 실패', 'error');
-  })
-  .catch(() => showToast('서버 연결 오류', 'error'));
-}
+  function switchTab(tab) {
+    document.getElementById('tab-login').classList.toggle('active', tab==='login');
+    document.getElementById('tab-signup').classList.toggle('active', tab==='signup');
+    document.getElementById('form-login').style.display = tab==='login' ? 'block' : 'none';
+    document.getElementById('form-signup').style.display = tab==='signup' ? 'block' : 'none';
+  }
 
-function doLogout() {
-  currentUser = null; allHistories = [];
-  updateNav(); goPage('login');
-  showToast('로그아웃되었습니다.');
-}
+  function onRoleChange() {
+    document.getElementById('familyField').classList.toggle('show', document.getElementById('signupRole').value === 'EWHA_FAMILY');
+  }
 
-function doSearch() {
-  searched = true;
-  const params = new URLSearchParams();
-  const center   = document.getElementById('fCenter').value;
-  const category = document.getElementById('fCategory').value;
-  const day      = document.getElementById('fDay').value.trim();
-  const timeFrom = document.getElementById('fTimeFrom').value;
-  const timeTo   = document.getElementById('fTimeTo').value;
-  const maxPrice = document.getElementById('fPrice').value;
-  const availOnly = document.getElementById('fAvail').checked;
+  function doLogin() {
+    const studentId = document.getElementById('loginId').value.trim();
+    const password  = document.getElementById('loginPw').value.trim();
+    if (!studentId || !password) { showToast('학번과 비밀번호를 입력해주세요.', 'error'); return; }
+    fetch('/api/members/login', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ studentId, password })
+    })
+            .then(res => res.json().then(data => ({ ok: res.ok, data })))
+            .then(({ ok, data }) => {
+              if (ok) {
+                currentUser = { studentId, name: studentId, memberId: data.memberId };
+                showToast('로그인되었습니다.', 'success');
+                setTimeout(() => goPage('courses'), 600);
+              } else {
+                showToast(data.message || '로그인 실패', 'error');
+              }
+            })
+            .catch(() => showToast('서버 연결 오류', 'error'));
+  }
 
-  if (center)    params.append('center', center);
-  if (category)  params.append('category', category);
-  if (day)       params.append('dayOfWeek', day);
-  if (timeFrom)  params.append('startTimeFrom', timeFrom);
-  if (timeTo)    params.append('startTimeTo', timeTo);
-  if (maxPrice)  params.append('maxPrice', maxPrice);
-  if (availOnly) params.append('hasAvailableSlot', 'true');
+  function doSignup() {
+    const studentId  = document.getElementById('signupId').value.trim();
+    const password   = document.getElementById('signupPw').value.trim();
+    const name       = document.getElementById('signupName').value.trim();
+    const major      = document.getElementById('signupMajor').value.trim();
+    const role       = document.getElementById('signupRole').value;
+    const familyName = document.getElementById('signupFamily').value.trim();
+    if (!studentId || !password || !name) { showToast('필수 항목을 입력해주세요.', 'error'); return; }
+    if (role === 'EWHA_FAMILY' && !familyName) { showToast('직계가족 학번을 입력해주세요.', 'error'); return; }
+    fetch('/api/members/signup', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ studentId, password, name, major, role, familyName })
+    })
+            .then(res => res.json().then(data => ({ ok: res.ok, data })))
+            .then(({ ok, data }) => {
+              if (ok) { showToast('회원가입이 완료되었습니다!', 'success'); setTimeout(() => switchTab('login'), 700); }
+              else showToast(data.message || '회원가입 실패', 'error');
+            })
+            .catch(() => showToast('서버 연결 오류', 'error'));
+  }
 
-  fetch('/api/courses/search?' + params.toString())
-    .then(res => { if (!res.ok) throw new Error(res.status); return res.json(); })
-    .then(data => renderCourses(data))
-    .catch(err => showToast('검색 오류: ' + err.message, 'error'));
-}
+  function doLogout() {
+    currentUser = null; allHistories = [];
+    updateNav(); goPage('login');
+    showToast('로그아웃되었습니다.');
+  }
 
-function renderCourses(list) {
-  const grid = document.getElementById('coursesGrid');
-  const countEl = document.getElementById('resultsCount');
-  countEl.innerHTML = `총 <strong>${list.length}개</strong>의 강좌가 검색되었습니다.`;
-  if (list.length === 0) { grid.innerHTML = '<div class="empty-state">조건에 맞는 강좌가 없습니다.</div>'; return; }
-  grid.innerHTML = list.map((c, i) => {
-    // CourseResponseDTO 필드: courseId, programName, center, category, price, difficulty,
-    //   instructorName, dayOfWeek, startTime, endTime, maxCapacity, currentCapacity, remainingSlots, status
-    const total = c.maxCapacity || 1;
-    const current = c.currentCapacity || 0;
-    const remaining = c.remainingSlots !== undefined ? c.remainingSlots : (total - current);
-    const pct = Math.round((current / total) * 100);
-    const isFull = remaining <= 0 || c.status === 'CANCELLED';
-    const isClosing = !isFull && pct >= 90;
-    const fillClass = isFull ? 'fill-full' : isClosing ? 'fill-warn' : 'fill-ok';
-    const diff = c.difficulty;
-    const diffBadge = diff ? `<span class="badge ${diff==='초급'?'badge-beginner':diff==='중급'?'badge-mid':'badge-adv'}">${diff}</span>` : '';
-    const statusBadge = isFull ? `<span class="badge badge-full">마감</span>` : isClosing ? `<span class="badge badge-closing">마감임박</span>` : `<span class="badge badge-active">신청가능</span>`;
-    const applyBtn = isFull ? `<button class="btn-apply disabled" disabled>마감</button>` : `<button class="btn-apply ${isClosing?'closing':''}" onclick="openApplyModal(${c.courseId}, '${c.programName}', '${c.dayOfWeek}', '${c.startTime}', '${c.endTime}', '${c.instructorName}', ${remaining}, ${c.price})">신청하기</button>`;
-    const centerLabel = CENTER_LABEL[c.center] || c.center || '-';
-    const categoryLabel = CATEGORY_LABEL[c.category] || c.category || '-';
-    const startTime = c.startTime ? c.startTime.substring(0,5) : '-';
-    const endTime   = c.endTime   ? c.endTime.substring(0,5)   : '-';
-    return `<div class="course-card" style="animation-delay:${i*0.05}s">
+  function toggleCategory(btn) {
+    btn.classList.toggle('active');
+  }
+
+  function doSearch() {
+    searched = true;
+    const params = new URLSearchParams();
+    const center   = document.getElementById('fCenter').value;
+    const categories = [...document.querySelectorAll('.category-btn.active')].map(b => b.dataset.value);
+    const day      = document.getElementById('fDay').value.trim();
+    const timeFrom = document.getElementById('fTimeFrom').value;
+    const timeTo   = document.getElementById('fTimeTo').value;
+    const maxPrice = document.getElementById('fPrice').value;
+    const availOnly = document.getElementById('fAvail').checked;
+
+    if (center) params.append('center', center);
+    categories.forEach(cat => params.append('category', cat));
+    if (day)       params.append('dayOfWeek', day);
+    if (timeFrom)  params.append('startTimeFrom', timeFrom);
+    if (timeTo)    params.append('startTimeTo', timeTo);
+    if (maxPrice)  params.append('maxPrice', maxPrice);
+    if (availOnly) params.append('hasAvailableSlot', 'true');
+
+    fetch('/api/courses/search?' + params.toString())
+            .then(res => { if (!res.ok) throw new Error(res.status); return res.json(); })
+            .then(data => renderCourses(data))
+            .catch(err => showToast('검색 오류: ' + err.message, 'error'));
+  }
+
+  function renderCourses(list) {
+    const grid = document.getElementById('coursesGrid');
+    const countEl = document.getElementById('resultsCount');
+    countEl.innerHTML = `총 <strong>${list.length}개</strong>의 강좌가 검색되었습니다.`;
+    if (list.length === 0) { grid.innerHTML = '<div class="empty-state">조건에 맞는 강좌가 없습니다.</div>'; return; }
+    grid.innerHTML = list.map((c, i) => {
+      const total = c.maxCapacity || 1;
+      const current = c.currentCapacity || 0;
+      const remaining = c.remainingSlots !== undefined ? c.remainingSlots : (total - current);
+      const pct = Math.round((current / total) * 100);
+      const isFull = remaining <= 0 || c.status === 'CANCELLED';
+      const isClosing = !isFull && pct >= 90;
+      const fillClass = isFull ? 'fill-full' : isClosing ? 'fill-warn' : 'fill-ok';
+      const diff = c.difficulty;
+      const diffBadge = diff ? `<span class="badge ${diff==='초급'?'badge-beginner':diff==='중급'?'badge-mid':'badge-adv'}">${diff}</span>` : '';
+      const statusBadge = isFull ? `<span class="badge badge-full">마감</span>` : isClosing ? `<span class="badge badge-closing">마감임박</span>` : `<span class="badge badge-active">신청가능</span>`;
+      const applyBtn = isFull ? `<button class="btn-apply disabled" disabled>마감</button>` : `<button class="btn-apply ${isClosing?'closing':''}" onclick="openApplyModal(${c.courseId}, '${c.programName}', '${c.dayOfWeek}', '${c.startTime}', '${c.endTime}', '${c.instructorName}', ${remaining}, ${c.price})">신청하기</button>`;
+      const centerLabel = CENTER_LABEL[c.center] || c.center || '-';
+      const categoryLabel = CATEGORY_LABEL[c.category] || c.category || '-';
+      const startTime = c.startTime ? c.startTime.substring(0,5) : '-';
+      const endTime   = c.endTime   ? c.endTime.substring(0,5)   : '-';
+      return `<div class="course-card" style="animation-delay:${i*0.05}s">
       <div class="card-header">
         <div>
           <div style="font-size:11px;color:var(--text-muted);margin-bottom:3px">${categoryLabel} · ${centerLabel}</div>
@@ -508,71 +515,71 @@ function renderCourses(list) {
         ${applyBtn}
       </div>
     </div>`;
-  }).join('');
-}
+    }).join('');
+  }
 
-function openApplyModal(courseId, programName, dayOfWeek, startTime, endTime, instructor, remaining, price) {
-  if (!currentUser) { showToast('로그인 후 신청할 수 있습니다.', 'error'); setTimeout(() => goPage('login'), 800); return; }
-  selectedCourse = { id: courseId, name: programName, dayOfWeek, startTime, endTime, instructor, remaining, price };
-  document.getElementById('modalDetail').innerHTML = `
+  function openApplyModal(courseId, programName, dayOfWeek, startTime, endTime, instructor, remaining, price) {
+    if (!currentUser) { showToast('로그인 후 신청할 수 있습니다.', 'error'); setTimeout(() => goPage('login'), 800); return; }
+    selectedCourse = { id: courseId, name: programName, dayOfWeek, startTime, endTime, instructor, remaining, price };
+    document.getElementById('modalDetail').innerHTML = `
     <div class="modal-detail-row"><span class="label">강좌명</span><span class="val">${programName}</span></div>
     <div class="modal-detail-row"><span class="label">요일 · 시간</span><span class="val">${dayOfWeek} | ${startTime}-${endTime}</span></div>
     <div class="modal-detail-row"><span class="label">강사</span><span class="val">${instructor}</span></div>
     <div class="modal-detail-row"><span class="label">잔여석</span><span class="val">${remaining}석</span></div>
     <div class="modal-detail-row"><span class="label">금액</span><span class="val" style="color:var(--primary)">${price ? price.toLocaleString() : '-'}원</span></div>`;
-  document.getElementById('applyModal').classList.add('open');
-}
+    document.getElementById('applyModal').classList.add('open');
+  }
 
-function closeApplyModal() { document.getElementById('applyModal').classList.remove('open'); selectedCourse = null; }
+  function closeApplyModal() { document.getElementById('applyModal').classList.remove('open'); selectedCourse = null; }
 
-function confirmApply() {
-  if (!selectedCourse || !currentUser) return;
-  const courseId = selectedCourse.id;
-  const memberId = currentUser.memberId;
-  const courseName = selectedCourse.name;
-  closeApplyModal();
-  fetch('/api/reservations', {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ memberId, courseId })
-  })
-  .then(res => res.text().then(text => ({ ok: res.ok, text })))
-  .then(({ ok, text }) => {
-    if (ok) { showToast(`"${courseName}" 신청 완료! 마이페이지에서 10분 내 결제하세요.`, 'success'); setTimeout(() => goPage('mypage'), 1500); }
-    else showToast('신청 실패: ' + text, 'error');
-  })
-  .catch(() => showToast('서버 연결 오류', 'error'));
-}
+  function confirmApply() {
+    if (!selectedCourse || !currentUser) return;
+    const courseId = selectedCourse.id;
+    const memberId = currentUser.memberId;
+    const courseName = selectedCourse.name;
+    closeApplyModal();
+    fetch('/api/reservations', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ memberId, courseId })
+    })
+            .then(res => res.text().then(text => ({ ok: res.ok, text })))
+            .then(({ ok, text }) => {
+              if (ok) { showToast(`"${courseName}" 신청 완료! 마이페이지에서 10분 내 결제하세요.`, 'success'); setTimeout(() => goPage('mypage'), 1500); }
+              else showToast('신청 실패: ' + text, 'error');
+            })
+            .catch(() => showToast('서버 연결 오류', 'error'));
+  }
 
-function getRoleLabel(role) {
-  const map = { EWHA_STUDENT:'이화 재학생', ALUMNI:'졸업생', FACULTY:'교직원', EWHA_FAMILY:'이화 가족' };
-  return map[role] || role || '-';
-}
+  function getRoleLabel(role) {
+    const map = { EWHA_STUDENT:'이화 재학생', ALUMNI:'졸업생', FACULTY:'교직원', EWHA_FAMILY:'이화 가족' };
+    return map[role] || role || '-';
+  }
 
-function getBadge(status) {
-  const map = { 'PENDING_PAYMENT':['결제대기','badge-pending'], 'IN_CART':['장바구니','badge-pending'], 'PAYMENT_COMPLETED':['결제완료','badge-complete'], 'CANCELLED':['취소','badge-cancelled'], 'REFUNDED':['환불','badge-refunded'] };
-  const s = map[status] || [status, 'badge-refunded'];
-  return `<span class="badge ${s[1]}">${s[0]}</span>`;
-}
+  function getBadge(status) {
+    const map = { 'PENDING_PAYMENT':['결제대기','badge-pending'], 'IN_CART':['장바구니','badge-pending'], 'PAYMENT_COMPLETED':['결제완료','badge-complete'], 'CANCELLED':['취소','badge-cancelled'], 'REFUNDED':['환불','badge-refunded'] };
+    const s = map[status] || [status, 'badge-refunded'];
+    return `<span class="badge ${s[1]}">${s[0]}</span>`;
+  }
 
-function startTimer(reservationId, expiresAt) {
-  if (timers[reservationId]) clearInterval(timers[reservationId]);
-  timers[reservationId] = setInterval(() => {
-    const el = document.getElementById('timer-' + reservationId);
-    if (!el) { clearInterval(timers[reservationId]); return; }
-    const diff = new Date(expiresAt).getTime() - Date.now();
-    if (diff <= 0) { el.textContent = '시간 만료'; el.className = 'timer-badge expired'; clearInterval(timers[reservationId]); return; }
-    const min = Math.floor(diff / 60000);
-    const sec = Math.floor((diff % 60000) / 1000);
-    el.textContent = `${min}:${sec < 10 ? '0' : ''}${sec} 내 결제 필요`;
-  }, 1000);
-}
+  function startTimer(reservationId, expiresAt) {
+    if (timers[reservationId]) clearInterval(timers[reservationId]);
+    timers[reservationId] = setInterval(() => {
+      const el = document.getElementById('timer-' + reservationId);
+      if (!el) { clearInterval(timers[reservationId]); return; }
+      const diff = new Date(expiresAt).getTime() - Date.now();
+      if (diff <= 0) { el.textContent = '시간 만료'; el.className = 'timer-badge expired'; clearInterval(timers[reservationId]); return; }
+      const min = Math.floor(diff / 60000);
+      const sec = Math.floor((diff % 60000) / 1000);
+      el.textContent = `${min}:${sec < 10 ? '0' : ''}${sec} 내 결제 필요`;
+    }, 1000);
+  }
 
-function renderHistoryList(list) {
-  const container = document.getElementById('mp-history-list');
-  if (!list || list.length === 0) { container.innerHTML = '<div class="mp-empty">내역이 없습니다.</div>'; return; }
-  container.innerHTML = list.map(item => {
-    const isPending = item.status === 'PENDING_PAYMENT';
-    return `<div class="history-item">
+  function renderHistoryList(list) {
+    const container = document.getElementById('mp-history-list');
+    if (!list || list.length === 0) { container.innerHTML = '<div class="mp-empty">내역이 없습니다.</div>'; return; }
+    container.innerHTML = list.map(item => {
+      const isPending = item.status === 'PENDING_PAYMENT';
+      return `<div class="history-item">
       <div class="history-left">
         <div class="history-program">${item.programName || '-'}</div>
         <div class="history-info">${item.courseInfo || '-'}</div>
@@ -585,78 +592,78 @@ function renderHistoryList(list) {
         ${isPending ? `<button class="btn-pay" onclick="openPayModal()">결제하기</button>` : ''}
       </div>
     </div>`;
-  }).join('');
-  list.forEach(item => { if (item.status === 'PENDING_PAYMENT' && item.expiresAt) startTimer(item.reservationId, item.expiresAt); });
-}
+    }).join('');
+    list.forEach(item => { if (item.status === 'PENDING_PAYMENT' && item.expiresAt) startTimer(item.reservationId, item.expiresAt); });
+  }
 
-function filterTab(status, btn) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderHistoryList(status === 'ALL' ? allHistories : allHistories.filter(h => h.status === status));
-}
+  function filterTab(status, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderHistoryList(status === 'ALL' ? allHistories : allHistories.filter(h => h.status === status));
+  }
 
-function loadMyPage(memberId) {
-  fetch(`/api/members/${memberId}/mypage`)
-    .then(res => { if (!res.ok) throw new Error(res.status); return res.json(); })
-    .then(data => {
-      document.getElementById('mp-name').textContent       = data.name      || '-';
-      document.getElementById('mp-student-id').textContent = data.studentId || '-';
-      document.getElementById('mp-major').textContent      = data.major     || '-';
-      document.getElementById('mp-role').textContent       = getRoleLabel(data.role);
-      if (currentUser) { currentUser.name = data.name; updateNav(); }
-      allHistories = data.applyHistories || [];
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-btn')[0].classList.add('active');
-      renderHistoryList(allHistories);
-    })
-    .catch(err => showToast('마이페이지 조회 실패: ' + err.message, 'error'));
-}
+  function loadMyPage(memberId) {
+    fetch(`/api/members/${memberId}/mypage`)
+            .then(res => { if (!res.ok) throw new Error(res.status); return res.json(); })
+            .then(data => {
+              document.getElementById('mp-name').textContent       = data.name      || '-';
+              document.getElementById('mp-student-id').textContent = data.studentId || '-';
+              document.getElementById('mp-major').textContent      = data.major     || '-';
+              document.getElementById('mp-role').textContent       = getRoleLabel(data.role);
+              if (currentUser) { currentUser.name = data.name; updateNav(); }
+              allHistories = data.applyHistories || [];
+              document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+              document.querySelectorAll('.tab-btn')[0].classList.add('active');
+              renderHistoryList(allHistories);
+            })
+            .catch(err => showToast('마이페이지 조회 실패: ' + err.message, 'error'));
+  }
 
-function openPayModal() {
-  if (!currentUser || !currentUser.memberId) return;
-  fetch(`/api/payments/summary/${currentUser.memberId}`)
-    .then(res => { if (!res.ok) throw new Error(res.status); return res.json(); })
-    .then(data => {
-      document.getElementById('payModalDetail').innerHTML = `
+  function openPayModal() {
+    if (!currentUser || !currentUser.memberId) return;
+    fetch(`/api/payments/summary/${currentUser.memberId}`)
+            .then(res => { if (!res.ok) throw new Error(res.status); return res.json(); })
+            .then(data => {
+              document.getElementById('payModalDetail').innerHTML = `
         <div class="modal-detail-row"><span class="label">강좌 금액</span><span class="val">${data.totalOriginalPrice.toLocaleString()}원</span></div>
         <div class="modal-detail-row"><span class="label">할인 금액</span><span class="val" style="color:var(--danger)">- ${data.discountAmount.toLocaleString()}원</span></div>
         <hr class="modal-divider">
         <div class="modal-detail-row"><span class="label">최종 결제 금액</span><span class="val highlight">${data.finalBillingPrice.toLocaleString()}원</span></div>`;
-      document.getElementById('confirmPayBtn').disabled = false;
-      document.getElementById('confirmPayBtn').textContent = '결제 완료';
-      document.getElementById('payModal').classList.add('open');
-    })
-    .catch(err => showToast('결제 정보 조회 실패: ' + err.message, 'error'));
-}
+              document.getElementById('confirmPayBtn').disabled = false;
+              document.getElementById('confirmPayBtn').textContent = '결제 완료';
+              document.getElementById('payModal').classList.add('open');
+            })
+            .catch(err => showToast('결제 정보 조회 실패: ' + err.message, 'error'));
+  }
 
-function closePayModal() { document.getElementById('payModal').classList.remove('open'); }
+  function closePayModal() { document.getElementById('payModal').classList.remove('open'); }
 
-function confirmPayment() {
-  if (!currentUser || !currentUser.memberId) return;
-  document.getElementById('confirmPayBtn').disabled = true;
-  document.getElementById('confirmPayBtn').textContent = '처리 중...';
-  fetch(`/api/payments/${currentUser.memberId}`, { method: 'POST', headers: { 'Content-Type': 'application/json' } })
-  .then(res => res.text().then(text => ({ ok: res.ok, text })))
-  .then(({ ok, text }) => {
-    closePayModal();
-    document.getElementById('confirmPayBtn').textContent = '결제 완료';
-    if (ok) { showToast('결제가 완료되었습니다!', 'success'); loadMyPage(currentUser.memberId); }
-    else showToast('결제 실패: ' + text, 'error');
-  })
-  .catch(() => { closePayModal(); showToast('서버 연결 오류', 'error'); });
-}
+  function confirmPayment() {
+    if (!currentUser || !currentUser.memberId) return;
+    document.getElementById('confirmPayBtn').disabled = true;
+    document.getElementById('confirmPayBtn').textContent = '처리 중...';
+    fetch(`/api/payments/${currentUser.memberId}`, { method: 'POST', headers: { 'Content-Type': 'application/json' } })
+            .then(res => res.text().then(text => ({ ok: res.ok, text })))
+            .then(({ ok, text }) => {
+              closePayModal();
+              document.getElementById('confirmPayBtn').textContent = '결제 완료';
+              if (ok) { showToast('결제가 완료되었습니다!', 'success'); loadMyPage(currentUser.memberId); }
+              else showToast('결제 실패: ' + text, 'error');
+            })
+            .catch(() => { closePayModal(); showToast('서버 연결 오류', 'error'); });
+  }
 
-function showToast(msg, type = '') {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.className = 'toast' + (type ? ' ' + type : '');
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
+  function showToast(msg, type = '') {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.className = 'toast' + (type ? ' ' + type : '');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
 
-document.getElementById('applyModal').addEventListener('click', e => { if (e.target === document.getElementById('applyModal')) closeApplyModal(); });
-document.getElementById('payModal').addEventListener('click', e => { if (e.target === document.getElementById('payModal')) closePayModal(); });
+  document.getElementById('applyModal').addEventListener('click', e => { if (e.target === document.getElementById('applyModal')) closeApplyModal(); });
+  document.getElementById('payModal').addEventListener('click', e => { if (e.target === document.getElementById('payModal')) closePayModal(); });
 
-updateNav();
+  updateNav();
 </script>
 </body>
 </html>
