@@ -7,6 +7,7 @@ import _5.gxprogram.dto.LoginRequestDTO;
 import _5.gxprogram.dto.MemberSignupRequestDTO;
 import _5.gxprogram.dto.MyPageResponseDTO;
 import _5.gxprogram.dto.MyPageResponseDTO.ApplyHistoryDTO;
+import _5.gxprogram.repository.AccountRepository;
 import _5.gxprogram.repository.ApplyRepository;
 import _5.gxprogram.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final ApplyRepository applyRepository;
+    private final AccountRepository accountRepository;
 
     private static final DateTimeFormatter DT_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     private static final DateTimeFormatter D_FMT  = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -29,7 +31,6 @@ public class MemberService {
     // 회원 가입
     @Transactional
     public Long signup(MemberSignupRequestDTO dto) {
-        // 학번 중복 여부
         if (memberRepository.existsByStudentId(dto.getStudentId())) {
             throw new IllegalArgumentException("이미 사용 중인 학번입니다: " + dto.getStudentId());
         }
@@ -69,6 +70,10 @@ public class MemberService {
                 .map(this::toApplyHistoryDTO)
                 .collect(Collectors.toList());
 
+        Integer balance = accountRepository.findByMemberId(memberId)
+                .map(acc -> acc.getBalance())
+                .orElse(null);
+
         return MyPageResponseDTO.builder()
                 .memberId(m.getId())
                 .studentId(m.getStudentId())
@@ -76,6 +81,7 @@ public class MemberService {
                 .major(m.getMajor())
                 .role(m.getRole())
                 .status(m.getStatus())
+                .accountBalance(balance)
                 .applyHistories(historyDTOs)
                 .build();
     }
