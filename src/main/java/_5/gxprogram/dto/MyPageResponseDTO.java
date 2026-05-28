@@ -7,7 +7,7 @@ import lombok.Getter;
 
 import java.util.List;
 
-// 마이페이지 응답 DTO , 회원 기본정보 + 예약/결제 내역을 한 번에 전달
+// 회원 기본정보 + 예약/결제 내역을 한 번에 전달
 @Getter @Builder
 public class MyPageResponseDTO {
 
@@ -18,6 +18,8 @@ public class MyPageResponseDTO {
     private String major;
     private memberRole role;
     private memberStatus status;
+
+    private Integer accountBalance;             // 계좌 잔액 추가
 
     // 예약/결제 내역
     private List<ApplyHistoryDTO> applyHistories;
