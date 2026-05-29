@@ -378,6 +378,7 @@
     document.getElementById('page-' + name).classList.add('active');
     updateNav();
     if (name === 'mypage' && currentUser && currentUser.memberId) loadMyPage(currentUser.memberId);
+    if (name === 'courses' && searched) doSearch();
   }
 
   function updateNav() {
@@ -675,6 +676,12 @@
   document.getElementById('payModal').addEventListener('click', e => { if (e.target === document.getElementById('payModal')) closePayModal(); });
 
   updateNav();
+  setInterval(() => {
+    if (searched) doSearch();
+    if (currentUser && currentUser.memberId && document.getElementById('page-mypage').classList.contains('active')) {
+      loadMyPage(currentUser.memberId);
+    }
+  }, 60000);
 </script>
 </body>
 </html>

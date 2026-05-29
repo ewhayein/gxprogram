@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import java.time.LocalDateTime;
 
 import java.util.List;
 
@@ -44,4 +45,6 @@ public interface ApplyRepository extends JpaRepository<apply, Long> {
     /* 중복 신청 검증용: 회원의 PENDING/COMPLETED 예약 전체 조회 */
     @Query("SELECT r FROM apply r WHERE r.member = :member AND r.status IN :statuses")
     List<apply> findByMemberAndStatusIn(@Param("member") member member, @Param("statuses") List<applyStatus> statuses);
+
+    List<apply> findByStatusAndExpiresAtBefore(applyStatus status, LocalDateTime now);
 }
