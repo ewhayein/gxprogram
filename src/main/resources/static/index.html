@@ -18,7 +18,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Noto Sans KR', sans-serif; background: var(--bg-page); color: var(--text-primary); min-height: 100vh; }
 
-    /* NAV */
     nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--nav-h); background: var(--primary); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
     .nav-logo { display: flex; align-items: center; gap: 8px; color: #fff; font-weight: 700; font-size: 17px; cursor: pointer; }
     .nav-right { display: flex; gap: 8px; }
@@ -27,11 +26,9 @@
     .nav-btn.primary-nav { background: #fff; color: var(--primary); border-color: #fff; }
     .nav-btn.primary-nav:hover { background: #E6F2ED; }
 
-    /* PAGE */
     .page { display: none; min-height: 100vh; padding-top: var(--nav-h); }
     .page.active { display: block; }
 
-    /* AUTH */
     .auth-wrap { min-height: calc(100vh - var(--nav-h)); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 16px; }
     .auth-tabs { display: flex; background: #fff; border-radius: var(--radius-lg) var(--radius-lg) 0 0; border: 1px solid var(--border); border-bottom: none; width: 100%; max-width: 460px; overflow: hidden; box-shadow: var(--shadow-sm); }
     .auth-tab { flex: 1; padding: 14px; text-align: center; font-size: 14px; font-weight: 600; color: var(--text-muted); cursor: pointer; border: none; background: transparent; font-family: inherit; transition: all 0.2s; border-bottom: 3px solid transparent; }
@@ -56,7 +53,6 @@
     .auth-footer a { color: var(--primary); font-weight: 600; cursor: pointer; text-decoration: none; }
     .auth-footer a:hover { text-decoration: underline; }
 
-    /* COURSES */
     .courses-wrap { padding: 32px 24px; max-width: 1100px; margin: 0 auto; }
     .page-title { font-size: 22px; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.3px; }
     .filter-panel { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px 16px; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
@@ -73,7 +69,7 @@
     .results-count { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
     .results-count strong { color: var(--primary); }
     .courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 16px; }
-    .course-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-sm); transition: all 0.2s; position: relative; overflow: hidden; animation: fadeIn 0.3s ease both; }
+    .course-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-sm); transition: all 0.2s; position: relative; overflow: hidden;  }
     .course-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: #B2D8C4; }
     .course-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--primary); }
     .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
@@ -106,7 +102,6 @@
     .btn-apply.closing { background: #FFF3E0; color: var(--warning); border: 1px solid var(--warning); }
     .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 14px; }
 
-    /* MYPAGE */
     .mypage-wrap { padding: 32px 24px; max-width: 900px; margin: 0 auto; }
     .mp-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
     .mp-card-title { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid #ECEFF1; }
@@ -133,11 +128,9 @@
     .btn-pay:disabled { background: #ECEFF1; color: var(--text-muted); cursor: not-allowed; }
     .mp-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 14px; }
 
-    /* MODAL */
-    .modal-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.45); backdrop-filter: blur(2px); align-items: center; justify-content: center; }
+    .modal-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.45); align-items: center; justify-content: center; }
     .modal-overlay.open { display: flex; }
     .modal { background: #fff; border-radius: var(--radius-lg); padding: 32px; width: 100%; max-width: 400px; box-shadow: var(--shadow-lg); animation: modalIn 0.25s ease; }
-    @keyframes modalIn { from { opacity:0; transform: translateY(16px) scale(0.97); } to { opacity:1; transform: none; } }
     .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
     .modal-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6; }
     .modal-detail { background: var(--bg-page); border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 20px; }
@@ -153,15 +146,12 @@
     .btn-confirm-modal:hover { background: var(--primary-dark); }
     .btn-confirm-modal:disabled { background: #ECEFF1; color: var(--text-muted); cursor: not-allowed; }
 
-    /* TOAST */
     .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px); background: #263238; color: #fff; padding: 12px 24px; border-radius: 8px; font-size: 13px; font-weight: 500; opacity: 0; transition: all 0.3s; z-index: 300; white-space: nowrap; pointer-events: none; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     .toast.success { background: var(--success); }
     .toast.error { background: var(--danger); }
 
-    @keyframes fadeIn { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: none; } }
 
-    /* 종목 토글 버튼 */
     .category-toggle-wrap { display: flex; flex-wrap: wrap; gap: 6px; }
     .category-btn { padding: 5px 12px; border: 1.5px solid var(--border); border-radius: 20px; font-size: 12px; font-weight: 500; font-family: inherit; background: #fff; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
     .category-btn:hover { border-color: var(--primary); color: var(--primary); }
@@ -170,7 +160,7 @@
 </head>
 <body>
 
-<!-- NAV -->
+
 <nav>
   <div class="nav-logo" onclick="goPage('courses')">
     GX / 프로그램 수강신청 시스템
@@ -181,7 +171,7 @@
   </div>
 </nav>
 
-<!-- PAGE 1: 로그인 + 회원가입 -->
+<!--로그인 + 회원가입 -->
 <div class="page active" id="page-login">
   <div class="auth-wrap">
     <div class="auth-tabs">
@@ -239,7 +229,7 @@
   </div>
 </div>
 
-<!-- PAGE 2: 강좌 검색 -->
+<!--강좌 검색 -->
 <div class="page" id="page-courses">
   <div class="courses-wrap">
     <h1 class="page-title">강좌 검색</h1>
@@ -297,7 +287,7 @@
           <input type="checkbox" id="fAvail"> 잔여석 있는 강좌만
         </label>
         <button class="btn-search" onclick="doSearch()">
-          <span class="search-dot"></span> 검색
+          검색
         </button>
       </div>
     </div>
@@ -308,7 +298,7 @@
   </div>
 </div>
 
-<!-- PAGE 3: 마이페이지 -->
+<!--마이페이지 -->
 <div class="page" id="page-mypage">
   <div class="mypage-wrap">
     <h1 class="page-title">마이페이지</h1>
@@ -335,7 +325,7 @@
   </div>
 </div>
 
-<!-- 수강신청 모달 -->
+<!-- 수강신청-->
 <div class="modal-overlay" id="applyModal">
   <div class="modal">
     <h3 class="modal-title">수강 신청</h3>
@@ -348,7 +338,7 @@
   </div>
 </div>
 
-<!-- 결제 모달 -->
+<!-- 결제-->
 <div class="modal-overlay" id="payModal">
   <div class="modal">
     <h3 class="modal-title">결제 확인</h3>

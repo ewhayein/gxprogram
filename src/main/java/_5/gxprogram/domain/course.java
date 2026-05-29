@@ -59,18 +59,17 @@ public class course {
         this.currentCapacity = 0; // 처음 개설될 때 현재 신청 인원은 0명으로 초기화
     }
 
-    // [추가] 테스트 환경에서 강좌를 쉽게 만들기 위한 생성자
+    // 테스트 환경에서 강좌를 쉽게 만들기 위한 생성자
     public course(int maxSeats, int currentSeats, int availableSeats) {
         this.maxCapacity = maxSeats;
         this.currentCapacity = currentSeats;
         this.availableSeats = availableSeats;
     }
 
-    // --- 비즈니스 로직 ---
 
-    /**
-     * 수강 신청 시 잔여 좌석 차감
-     */
+
+    //잔여 좌석 차감
+
     // Course.java 내부 메서드
     public void decreaseSeats() {
         // 잔여 좌석이 0 이하면 신청 불가 (현재 좌석이 0개면, 즉 꽉 찼으면 에러)
@@ -87,7 +86,7 @@ public class course {
             throw new IllegalStateException("잔여 좌석이 최대 수용 인원을 초과할 수 없습니다.");
         }
 
-        // 2. 수강생이 0명 이하인데 취소하는 경우 방어 로직 (데이터 무결성)
+        // 수강생이 0명 이하인데 취소하는 경우 방어 로직 (데이터 무결성)
         if (this.currentCapacity <= 0) {
             throw new IllegalStateException("현재 수강생이 없습니다.");
         }

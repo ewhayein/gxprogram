@@ -42,10 +42,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * 통합 테스트 — 수강 신청 / 결제 / 환불 전 흐름.
- * 시나리오 S1~S7 (서비스 레벨) + S9 (MockMvc 컨트롤러 레벨)을 @Nested로 그룹화.
- */
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
@@ -90,10 +86,7 @@ class PaymentFlowIntegrationTest {
                 .get().extracting(account::getBalance).isEqualTo(100_000);
     }
 
-    // ============================================================
-    // S1~S7: 서비스 레벨 통합 시나리오 (다음 단계에서 작성)
-    // ============================================================
-
+    // S1~S7: 서비스 레벨 시나리오
     @Nested
     @DisplayName("S1~S7: 수강 신청 / 결제 / 환불 시나리오")
     class ServiceLayerScenarios {
@@ -366,9 +359,7 @@ class PaymentFlowIntegrationTest {
         }
     }
 
-    // ============================================================
-    // S9: MockMvc 컨트롤러 레벨 (3개 핵심 케이스)
-    // ============================================================
+// S9: 컨트롤러 레벨
 
     @Nested
     @DisplayName("S9: 컨트롤러 레벨 (MockMvc)")

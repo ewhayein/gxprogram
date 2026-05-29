@@ -38,7 +38,7 @@ public class MemberService {
         }
         member newMember = member.builder()
                 .studentId(dto.getStudentId())
-                .password(passwordEncoder.encode(dto.getPassword()))   // 🔥 평문 → 암호화
+                .password(passwordEncoder.encode(dto.getPassword()))
                 .name(dto.getName())
                 .major(dto.getMajor())
                 .familyName(dto.getFamilyName())

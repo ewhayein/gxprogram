@@ -48,7 +48,6 @@ public class apply {
     public apply(course course, member member) {
         this.course = course;
         this.member = member;
-        // ✅ applyStatus의 PENDING_PAYMENT 사용
         this.status = applyStatus.PENDING_PAYMENT;
         this.createdAt = LocalDateTime.now();
         this.expiresAt = LocalDateTime.now().plusMinutes(10);

@@ -7,9 +7,7 @@ import lombok.Setter;
 
 import java.util.List;
 
-/**
- * 프론트엔드 결제 확인창에 보여줄 영수증 DTO
- */
+// 프론트엔드 결제 확인창에 보여줄 영수증 DTO
 @Getter
 @AllArgsConstructor
 public class OrderSummaryResponseDTO {

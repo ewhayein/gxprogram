@@ -17,7 +17,7 @@ import java.util.List;
 public class CourseService {
     private final CourseRepository courseRepository;
 
-    /* 강좌 다중 필터 검색 */
+    // 강좌 다중 필터 검색
     public List<CourseResponseDTO> searchCourses(ProgramSearchRequestDTO condition) {
         validateTimeRange(condition);
         return courseRepository.searchCourses(condition);

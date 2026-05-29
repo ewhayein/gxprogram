@@ -15,7 +15,7 @@ import java.util.List;
 public class CourseController {
     private final CourseService courseService;
 
-    /* 강좌 검색 (다중 필터), 모든 파라미터는 선택사항 - null이면 해당 조건 무시 */
+    //강좌 검색
     @GetMapping("/search")
     public ResponseEntity<List<CourseResponseDTO>> searchCourses(
             @ModelAttribute ProgramSearchRequestDTO condition) {

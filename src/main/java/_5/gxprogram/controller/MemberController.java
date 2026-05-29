@@ -17,7 +17,7 @@ import java.util.Map;
 public class MemberController {
     private final MemberService memberService;
 
-    /* 회원가입 */
+    //회원가입
     @PostMapping("/signup")
     public ResponseEntity<Map<String, Object>> signup(@Valid @RequestBody MemberSignupRequestDTO dto) {
         Long memberId = memberService.signup(dto);
@@ -27,7 +27,7 @@ public class MemberController {
         ));
     }
 
-    /* 로그인 */
+    //로그인
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@Valid @RequestBody LoginRequestDTO dto) {
         Long memberId = memberService.login(dto);
@@ -37,7 +37,7 @@ public class MemberController {
         ));
     }
 
-    /* 마이페이지 조회 */
+    //마이페이지 조회
     @GetMapping("/{memberId}/mypage")
     public ResponseEntity<MyPageResponseDTO> getMyPage(@PathVariable Long memberId) {
         MyPageResponseDTO response = memberService.getMyPage(memberId);

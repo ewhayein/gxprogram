@@ -13,7 +13,7 @@ import java.util.Set;
 @Component
 public class QuantityDiscountPolicy implements DiscountPolicy {
 
-    //수량 할인이 적용되는 카테고리만 안전하게 그룹화
+    // 수량 할인 대상 카테고리
     private static final Set<programCategory> QUANTITY_DISCOUNT_TARGETS = EnumSet.of(
             programCategory.GX, programCategory.SPORTS_CLIMBING,
             programCategory.GOLF, programCategory.SQUASH,
@@ -26,9 +26,9 @@ public class QuantityDiscountPolicy implements DiscountPolicy {
             return result;
         }
 
-        // 1차 순회: 장바구니 구성 분석
+        // 장바구니 구성 분석
         boolean hasHealth = false;
-        boolean hasComboTrigger = false; // 헬스 20% 할인을 발동시키는 트리거 (GX/스포츠/SMALL_GROUP)
+        boolean hasComboTrigger = false; // 헬스 20% 할인을 발동시키는 트리거
         int quantityTargetCount = 0;     // 수량 할인 대상 개수
 
         for (apply reservation : reservations) {
@@ -45,9 +45,9 @@ public class QuantityDiscountPolicy implements DiscountPolicy {
             // ONE_TIME_PASS, MEASUREMENT는 어떤 할인에도 기여하지 않으므로 무시
         }
 
-        // 2차 순회: 규칙에 따라 각 예약(apply)에 할인액 분배 (우선순위: 콤보 -> 수량)
+        //할인액 분배
 
-        // [규칙 1] 헬스 + (GX/스포츠/SMALL_GROUP) 콤보 → 헬스 카테고리 apply에만 20% 할인
+        // 헬스 + (GX/스포츠/SMALL_GROUP) 콤보 20% 할인
         if (hasHealth && hasComboTrigger) {
             for (apply reservation : reservations) {
                 programCategory category = reservation.getCourse().getProgram().getCategory();
@@ -59,7 +59,7 @@ public class QuantityDiscountPolicy implements DiscountPolicy {
             return result;
         }
 
-        // [규칙 2] 헬스 없이 수량 할인 대상 다수 결제 → 수량 대상 apply에만 비율 할인
+        // 헬스 없이 수량 할인 대상 다수 결제 → 수량 대상 apply에만 비율 할인
         if (!hasHealth) {
             double rate = 0.0;
             if (quantityTargetCount >= 3) {

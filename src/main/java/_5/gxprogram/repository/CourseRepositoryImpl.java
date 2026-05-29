@@ -16,7 +16,7 @@ import java.util.List;
 public class CourseRepositoryImpl implements CourseRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
-    /* 다중 필터 동적 검색 (핵심 QueryDSL 로직) */
+    // 다중 필터 검색
     @Override
     public List<CourseResponseDTO> searchCourses(ProgramSearchRequestDTO condition) {
         Qcourse c = Qcourse.course;
