@@ -13,15 +13,20 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(indexes = {
+        @Index(name = "idx_course_status", columnList = "status"),
+        @Index(name = "idx_course_program_id", columnList = "program_id"),
+        @Index(name = "idx_course_day_of_week", columnList = "dayOfWeek"),
+        @Index(name = "idx_course_start_time", columnList = "startTime")
+})
+
 public class course {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "course_id")
+
     private Long id;
-
     private String name;
-
     private int availableSeats;
-
     private LocalDate targetDate;
 
     // N:1 연관관계 매핑 (어떤 프로그램에 속한 강좌인지)
@@ -91,7 +96,6 @@ public class course {
         if (this.currentCapacity <= 0) {
             throw new IllegalStateException("현재 수강생이 없습니다.");
         }
-
         this.availableSeats++;
         this.currentCapacity--;
     }

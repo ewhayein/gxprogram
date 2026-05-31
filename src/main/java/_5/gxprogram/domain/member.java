@@ -12,6 +12,11 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED) //JPA를 위한 기본 생성자는 보호 유지
+@Table(indexes = {
+        @Index(name = "idx_member_student_id", columnList = "studentId"),
+        @Index(name = "idx_member_status", columnList = "status")
+})
+
 public class member {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
