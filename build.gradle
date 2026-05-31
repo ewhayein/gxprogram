@@ -57,3 +57,5 @@ tasks.withType(JavaCompile).configureEach {
 clean {
 	delete file(generated)
 }
+
+runtimeOnly 'com.mysql.cj:mysql-connector-j'
