@@ -3,6 +3,7 @@ package _5.gxprogram.service;
 import _5.gxprogram.domain.apply;
 import _5.gxprogram.domain.member;
 import _5.gxprogram.domain.memberStatus;
+import _5.gxprogram.domain.account;
 import _5.gxprogram.dto.LoginRequestDTO;
 import _5.gxprogram.dto.MemberSignupRequestDTO;
 import _5.gxprogram.dto.MyPageResponseDTO;
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -45,10 +47,28 @@ public class MemberService {
                 .role(dto.getRole())
                 .status(memberStatus.ACTIVE)
                 .build();
-        return memberRepository.save(newMember).getId();
+        member saved = memberRepository.save(newMember);
+
+        // 가상 계좌 자동 발급 (시연용 초기 잔액 50만원이나 실제로는 충전 API로 채우는 구조)
+        // 가상 계좌 자동 발급 (시연용 초기 잔액 50만원, 실제로는 충전 API로 채우는 구조)
+        account virtualAccount = new account(
+                saved,
+                generateAccountNumber(),    // ⭐ 인자 제거
+                500_000
+        );
+        accountRepository.save(virtualAccount);
+
+        return saved.getId();
     }
 
-    // login 하기
+    // 10자리 가상 계좌번호 랜덤 생성 (예: 8347521905) -> 추후 중복 계좌에 대한 대책 필요 (개선필요)
+    private String generateAccountNumber() {
+        // 1,000,000,000에서 9,999,999,999까지의 범위 -> 첫 자리 0 안 오게
+        long num = ThreadLocalRandom.current().nextLong(1_000_000_000L, 10_000_000_000L);
+        return String.valueOf(num);
+    }
+
+    // 로그인 하기
     public Long login(LoginRequestDTO dto) {
         member found = memberRepository.findByStudentId(dto.getStudentId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 학번입니다."));
@@ -88,7 +108,7 @@ public class MemberService {
                 .build();
     }
 
-    // apply 엔티티 → ApplyHistoryDTO 변환
+    // apply 엔티티를 ApplyHistoryDTO 변환
     private ApplyHistoryDTO toApplyHistoryDTO(apply a) {
         String courseInfo = String.format("%s %s~%s / %s",
                 a.getCourse().getDayOfWeek(),

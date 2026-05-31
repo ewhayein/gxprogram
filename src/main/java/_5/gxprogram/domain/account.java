@@ -13,6 +13,13 @@ import java.util.List;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class account {
+
+    public account(member member, String accountNumber, Integer balance) {
+        this.member = member;
+        this.accountNumber = accountNumber;
+        this.balance = balance;
+    }
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "account_id")
     private Long id;

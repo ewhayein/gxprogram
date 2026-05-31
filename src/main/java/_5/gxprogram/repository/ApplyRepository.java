@@ -47,4 +47,15 @@ public interface ApplyRepository extends JpaRepository<apply, Long> {
     List<apply> findByMemberAndStatusIn(@Param("member") member member, @Param("statuses") List<applyStatus> statuses);
 
     List<apply> findByStatusAndExpiresAtBefore(applyStatus status, LocalDateTime now);
+
+    /** 선택된 ID들 중 본인의 IN_CART 항목만 조회 (course/program JOIN FETCH로 N+1 방지) */
+    @Query("SELECT a FROM apply a " +
+            "JOIN FETCH a.course c " +
+            "JOIN FETCH c.program p " +
+            "WHERE a.id IN :applyIds AND a.member.id = :memberId AND a.status = :status")
+    List<apply> findByIdInAndMemberIdAndStatus(@Param("applyIds") List<Long> applyIds,
+                                               @Param("memberId") Long memberId,
+                                               @Param("status") applyStatus status);
 }
+
+

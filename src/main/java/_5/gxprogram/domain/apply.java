@@ -48,9 +48,9 @@ public class apply {
     public apply(course course, member member) {
         this.course = course;
         this.member = member;
-        this.status = applyStatus.PENDING_PAYMENT;
+        this.status = applyStatus.IN_CART;
         this.createdAt = LocalDateTime.now();
-        this.expiresAt = LocalDateTime.now().plusMinutes(10);
+        this.expiresAt = null;                    //결제 신청 시점에 세팅
         this.paymentAmount = 0;
     }
 
@@ -63,6 +63,15 @@ public class apply {
             throw new IllegalStateException("이미 환불 처리가 완료된 내역입니다.");
         }
         this.status = applyStatus.CANCELLED;
+    }
+
+    //IN_CART → PENDING_PAYMENT 전환 + 10분 만료 시작
+    public void requestPayment() {
+        if (this.status != applyStatus.IN_CART) {
+            throw new IllegalStateException("장바구니 상태의 예약만 결제 신청할 수 있습니다. 현재 상태: " + this.status);
+        }
+        this.status = applyStatus.PENDING_PAYMENT;
+        this.expiresAt = LocalDateTime.now().plusMinutes(10);
     }
 
     // 최종 결제 완료 처리
