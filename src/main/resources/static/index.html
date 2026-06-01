@@ -591,7 +591,9 @@
     const container = document.getElementById('mp-history-list');
     if (!list || list.length === 0) { container.innerHTML = '<div class="mp-empty">내역이 없습니다.</div>'; return; }
     container.innerHTML = list.map(item => {
-      const isPending = item.status === 'PENDING_PAYMENT';
+      const isInCart    = item.status === 'IN_CART';
+      const isPending   = item.status === 'PENDING_PAYMENT';
+      const isCompleted = item.status === 'PAYMENT_COMPLETED';
       return `<div class="history-item">
       <div class="history-left">
         <div class="history-program">${item.programName || '-'}</div>
@@ -602,7 +604,10 @@
         ${getBadge(item.status)}
         ${isPending ? `<span class="timer-badge" id="timer-${item.reservationId}">계산 중...</span>` : ''}
         <div class="history-amount">${item.paymentAmount ? item.paymentAmount.toLocaleString() + '원' : '-'}</div>
-        ${isPending ? `<button class="btn-pay" onclick="openPayModal()">결제하기</button>` : ''}
+                ${isInCart    ? `<button class="btn-pay" onclick="requestPayment(${item.reservationId})">결제 신청</button>` : ''}
+        ${isPending   ? `<button class="btn-pay" onclick="openPayModal()">결제하기</button>` : ''}
+        ${isCompleted ? `<button class="btn-pay" onclick="refundReservation(${item.reservationId})">환불</button>` : ''}
+        ${(isInCart || isPending) ? `<button class="btn-cancel-modal" onclick="cancelReservation(${item.reservationId})">삭제</button>` : ''}
       </div>
     </div>`;
     }).join('');
@@ -661,11 +666,50 @@
             .then(({ ok, text }) => {
               closePayModal();
               document.getElementById('confirmPayBtn').textContent = '결제 완료';
-              if (ok) { showToast('결제가 완료되었습니다!', 'success'); loadMyPage(currentUser.memberId); }
+              if (ok) { showToast('결제가 완료되었습니다.', 'success'); loadMyPage(currentUser.memberId); }
               else showToast('결제 실패: ' + text, 'error');
             })
             .catch(() => { closePayModal(); showToast('서버 연결 오류', 'error'); });
   }
+
+  function requestPayment(applyId) {
+    if (!currentUser || !currentUser.memberId) return;
+    fetch('/api/reservations/request-payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ memberId: currentUser.memberId, applyIds: [applyId] })
+    })
+            .then(res => res.text().then(text => ({ ok: res.ok, text })))
+            .then(({ ok, text }) => {
+              if (ok) { showToast('결제 대기로 전환되었습니다. 10분 내 결제해주세요.', 'success'); loadMyPage(currentUser.memberId); }
+              else showToast('결제 신청 실패: ' + text, 'error');
+            })
+            .catch(() => showToast('서버 연결 오류', 'error'));
+  }
+
+  function refundReservation(applyId) {
+    if (!confirm('환불하시겠습니까?')) return;
+    fetch(`/api/reservations/${applyId}/refund`, { method: 'POST' })
+            .then(res => res.text().then(text => ({ ok: res.ok, text })))
+            .then(({ ok, text }) => {
+              if (ok) { showToast('환불이 완료되었습니다.', 'success'); loadMyPage(currentUser.memberId); }
+              else showToast('환불 실패: ' + text, 'error');
+            })
+            .catch(() => showToast('서버 연결 오류', 'error'));
+  }
+
+  function cancelReservation(applyId) {
+    if (!confirm('삭제하시겠습니까?')) return;
+    fetch(`/api/reservations/${applyId}`, { method: 'DELETE' })
+            .then(res => res.text().then(text => ({ ok: res.ok, text })))
+            .then(({ ok, text }) => {
+              if (ok) { showToast('삭제되었습니다.', 'success'); loadMyPage(currentUser.memberId); }
+              else showToast('삭제 실패: ' + text, 'error');
+            })
+            .catch(() => showToast('서버 연결 오류', 'error'));
+  }
+
+
 
   function showToast(msg, type = '') {
     const t = document.getElementById('toast');

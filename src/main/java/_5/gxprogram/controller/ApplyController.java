@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/reservations")
@@ -31,5 +32,18 @@ public class ApplyController {
     public ResponseEntity<String> requestPayment(@Valid @RequestBody PaymentRequestDTO dto) {
         applyService.requestPayment(dto.getMemberId(), dto.getApplyIds());
         return ResponseEntity.ok("선택한 강좌가 결제 대기 상태로 전환되었습니다. 10분 이내에 결제를 완료해주세요.");
+    }
+    /** 환불 (결제 완료 상태에서만 가능) — applyService.refundCourse 호출 */
+    @PostMapping("/{applyId}/refund")
+    public ResponseEntity<String> refund(@PathVariable Long applyId) {
+        applyService.refundCourse(applyId);
+        return ResponseEntity.ok("환불이 완료되었습니다.");
+    }
+
+    /** 장바구니 삭제/예약 취소 (IN_CART 또는 PENDING_PAYMENT 상태) */
+    @DeleteMapping("/{applyId}")
+    public ResponseEntity<String> cancel(@PathVariable Long applyId) {
+        applyService.cancelReservation(applyId);   // ← 아래 Step 2에서 추가
+        return ResponseEntity.ok("취소되었습니다.");
     }
 }
