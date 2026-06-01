@@ -117,4 +117,20 @@ public class ApplyService {
                 .orElseThrow(() -> new IllegalArgumentException("회원의 계좌 정보를 찾을 수 없습니다."));
         account.setBalance(account.getBalance() + apply.getPaymentAmount());
     }
+
+    /** 장바구니/결제 대기 취소 — IN_CART는 좌석 X, PENDING_PAYMENT는 좌석 복구 */
+    @Transactional
+    public void cancelReservation(Long applyId) {
+        apply apply = applyRepository.findById(applyId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 신청 내역입니다. id=" + applyId));
+
+        applyStatus prev = apply.getStatus();
+        apply.cancel();   // 엔티티 내부에서 CANCELLED로 전환 + 상태 검증
+
+        // PENDING_PAYMENT 였다면 좌석을 차지하고 있었으므로 복구
+        if (prev == applyStatus.PENDING_PAYMENT) {
+            apply.getCourse().increaseSeats();
+        }
+        // IN_CART 였다면 좌석을 안 차지했으니 복구 불필요
+    }
 }

@@ -59,8 +59,17 @@ public class CourseRepositoryImpl implements CourseRepositoryCustom {
     }
 
     private BooleanExpression dayOfWeekContains(String day) {
-        return (day != null && !day.isBlank())
-                ? Qcourse.course.dayOfWeek.contains(day) : null;
+        if (day == null || day.isBlank()) return null;
+
+        // 오류 발생했던 부분: 프론트에서는 쉼표로 보내는데, 여기서 문자열 통째로 LIKE '%월%' 검색하는 문제 (수업시간에 진행했음)
+        BooleanExpression result = null;
+        for (String d : day.split(",")) {
+            String trimmed = d.trim();
+            if (trimmed.isEmpty()) continue;
+            BooleanExpression cond = Qcourse.course.dayOfWeek.contains(trimmed);
+            result = (result == null) ? cond : result.and(cond);
+        }
+        return result;
     }
 
     private BooleanExpression startTimeBetween(String from, String to) {
