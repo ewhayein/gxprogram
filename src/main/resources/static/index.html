@@ -182,17 +182,8 @@
       <h2 class="auth-title">로그인</h2>
 
       <div class="form-group">
-        <label class="form-label">회원 유형 <span class="req">*</span></label>
-        <select class="form-select" id="signupRole" onchange="onRoleChange()">
-          <option value="EWHA_STUDENT">이화 재학생</option>
-          <option value="ALUMNI">졸업생</option>
-          <option value="FACULTY">교직원</option>
-          <option value="EWHA_FAMILY">이화 가족</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">학번</label>
-        <input class="form-input" type="text" placeholder="학번을 입력하세요" id="loginId">
+        <label class="form-label">학번 / 아이디</label>
+        <input class="form-input" type="text" placeholder="학번 또는 아이디를 입력하세요" id="loginId">
       </div>
       <div class="form-group">
         <label class="form-label">비밀번호</label>
@@ -203,6 +194,15 @@
     </div>
     <div class="auth-card" id="form-signup" style="display:none">
       <h2 class="auth-title">회원가입</h2>
+      <div class="form-group">
+        <label class="form-label">회원 유형 <span class="req">*</span></label>
+        <select class="form-select" id="signupRole" onchange="onRoleChange()">
+          <option value="EWHA_STUDENT">이화 재학생</option>
+          <option value="ALUMNI">졸업생</option>
+          <option value="FACULTY">교직원</option>
+          <option value="EWHA_FAMILY">이화 가족</option>
+        </select>
+      </div>
       <div class="form-group">
         <label class="form-label" id="signupIdLabel">학번 <span class="req">*</span></label>
         <input class="form-input" type="text" placeholder="학번을 입력하세요" id="signupId">
@@ -436,7 +436,11 @@
     const major      = document.getElementById('signupMajor').value.trim();
     const role       = document.getElementById('signupRole').value;
     const familyName = document.getElementById('signupFamily').value.trim();
-    if (!studentId || !password || !name) { showToast('필수 항목을 입력해주세요.', 'error'); return; }
+    if (!studentId) {
+      showToast(role === 'EWHA_STUDENT' ? '학번을 입력해주세요.' : '아이디를 입력해주세요.', 'error');
+      return;
+    }
+    if (!password || !name) { showToast('필수 항목을 입력해주세요.', 'error'); return; }
     if (role === 'EWHA_FAMILY' && !familyName) { showToast('직계가족 학번을 입력해주세요.', 'error'); return; }
     fetch('/api/members/signup', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
