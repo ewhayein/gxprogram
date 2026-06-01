@@ -180,6 +180,16 @@
     </div>
     <div class="auth-card" id="form-login">
       <h2 class="auth-title">로그인</h2>
+
+      <div class="form-group">
+        <label class="form-label">회원 유형 <span class="req">*</span></label>
+        <select class="form-select" id="signupRole" onchange="onRoleChange()">
+          <option value="EWHA_STUDENT">이화 재학생</option>
+          <option value="ALUMNI">졸업생</option>
+          <option value="FACULTY">교직원</option>
+          <option value="EWHA_FAMILY">이화 가족</option>
+        </select>
+      </div>
       <div class="form-group">
         <label class="form-label">학번</label>
         <input class="form-input" type="text" placeholder="학번을 입력하세요" id="loginId">
@@ -194,7 +204,7 @@
     <div class="auth-card" id="form-signup" style="display:none">
       <h2 class="auth-title">회원가입</h2>
       <div class="form-group">
-        <label class="form-label">학번 <span class="req">*</span></label>
+        <label class="form-label" id="signupIdLabel">학번 <span class="req">*</span></label>
         <input class="form-input" type="text" placeholder="학번을 입력하세요" id="signupId">
       </div>
       <div class="form-group">
@@ -210,15 +220,7 @@
         <label class="form-label">전공</label>
         <input class="form-input" type="text" placeholder="전공을 입력하세요 (선택)" id="signupMajor">
       </div>
-      <div class="form-group">
-        <label class="form-label">회원 유형 <span class="req">*</span></label>
-        <select class="form-select" id="signupRole" onchange="onRoleChange()">
-          <option value="EWHA_STUDENT">이화 재학생</option>
-          <option value="ALUMNI">졸업생</option>
-          <option value="FACULTY">교직원</option>
-          <option value="EWHA_FAMILY">이화 가족</option>
-        </select>
-      </div>
+
       <div class="form-group family-field" id="familyField">
         <label class="form-label">직계가족 학번 <span class="req">*</span></label>
         <input class="form-input" type="text" placeholder="직계가족 재학생의 학번을 입력하세요" id="signupFamily">
@@ -393,7 +395,17 @@
   }
 
   function onRoleChange() {
-    document.getElementById('familyField').classList.toggle('show', document.getElementById('signupRole').value === 'EWHA_FAMILY');
+    const role = document.getElementById('signupRole').value;
+    document.getElementById('familyField').classList.toggle('show', role === 'EWHA_FAMILY');
+    const label = document.getElementById('signupIdLabel');
+    const input = document.getElementById('signupId');
+    if (role === 'EWHA_STUDENT') {
+      label.innerHTML = '학번 <span class="req">*</span>';
+      input.placeholder = '학번을 입력하세요';
+    } else {
+      label.innerHTML = '아이디 <span class="req">*</span>';
+      input.placeholder = '아이디를 입력하세요';
+    }
   }
 
   function doLogin() {
