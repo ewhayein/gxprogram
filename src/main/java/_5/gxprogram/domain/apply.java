@@ -65,13 +65,13 @@ public class apply {
         this.status = applyStatus.CANCELLED;
     }
 
-    //IN_CART → PENDING_PAYMENT 전환 + 10분 만료 시작
+    //IN_CART → PENDING_PAYMENT 전환 + 10분 만료 시작 --> 우선 시연을 위해 30초로 설정함.
     public void requestPayment() {
         if (this.status != applyStatus.IN_CART) {
             throw new IllegalStateException("장바구니 상태의 예약만 결제 신청할 수 있습니다. 현재 상태: " + this.status);
         }
         this.status = applyStatus.PENDING_PAYMENT;
-        this.expiresAt = LocalDateTime.now().plusMinutes(10);
+        this.expiresAt = LocalDateTime.now().plusSeconds(30);
     }
 
     // 최종 결제 완료 처리

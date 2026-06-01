@@ -3,6 +3,7 @@ package _5.gxprogram.service;
 import _5.gxprogram.domain.apply;
 import _5.gxprogram.domain.applyStatus;
 import _5.gxprogram.repository.ApplyRepository;
+import _5.gxprogram.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public class ReservationSchedularService {
 
     private final ApplyRepository applyRepository;
 
-    @Scheduled(fixedDelay = 60000) // 1분마다 실행
+    @Scheduled(fixedDelay = 5000) // 5초마다 실행 --> 1분마다 실행하니 타임아웃 직후 새로고침하면 상태 반영이 안 되는 문제로 인함.
     @Transactional
     public void cancelExpiredReservations() {
         List<apply> expiredList = applyRepository.findByStatusAndExpiresAtBefore(
